@@ -119,30 +119,51 @@ for l=1:L
 end
 
 
-Hrs=0;
-Hr=0;
+Hths=0;
+Hth=0;
 
 for l=1:L
     for m=0:1
         for s=m:L
             Psm=legendre(s,cos(theta));
+            Ps1m=legendre(s+1,cos(theta));
             if s~=0
                 Psm=reshape(Psm(m+1,:,:),size(R));
             end
-            Hrs=Hrs+ (-1)^(s+m) * nchoosek(l+s,s+m)*s.*(R.^(s-1)).*Psm/...
+            Ps1m=reshape(Ps1m(m+1,:,:),size(R));
+            %compute derivative of the associated legendre function
+            dPsm=((m-s-1).*Ps1m + (s+1).*cos(theta).*Psm)./(-sin(theta));
+            Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm/...
                 (sep^(l+s+1));
         end
         if m==0
             Plm=legendre(l,cos(theta));
+            Pl1m=legendre(l+1,cos(theta));
             Plm=reshape(Plm(m+1,:,:),size(R));
-            Hr=Hr+(l+1)*Beta1_0(l).*Plm./(R.^(l+2)) - Beta2_0(l)*Hrs;
+            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
+            
+            %compute derivative of the associated legendre function
+            dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
+            Hth=Hth+Beta1_0(l).*Plm./(R.^(l+2)) - Beta2_0(l)*Hths;
         elseif m==1
             Plm=legendre(l,cos(theta));
+            Pl1m=legendre(l+1,cos(theta));
             Plm=reshape(Plm(m+1,:,:),size(R));
-            Hr=Hr+(l+1)*Beta1_1(l).*Plm./(R.^(l+2)) - Beta2_1(l)*Hrs;
+            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
+            
+            %compute derivative of the associated legendre function
+            dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
+            Hth=Hth+Beta1_1(l).*Plm./(R.^(l+2)) - Beta2_1(l)*Hths;
         end
     end
 end
 
-
-
+%% Formulating the Maxwell Stress Tensor in Spherical Coordinates
+size=size(Hr);
+for i=1:size(1)
+    for j=1:size(2)
+        H=[Hr(i,j);Hth(i,j)];
+        h=norm(H);
+        sigma=(mu0.*H*H' - 0.5*(h^2).*eye(2));
+    end
+end
