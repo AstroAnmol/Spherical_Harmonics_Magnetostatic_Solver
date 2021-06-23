@@ -75,6 +75,12 @@ A1(L+1:end,L+1:end)=X;
 Q0=[q0;q0];
 Q1=[q1;q1];
 
+% %Using SVD to solve the linear system
+% [U0,S0,V0] = svd(A0);
+% A0_inv=V0*inv(S0)*U0';
+% Beta0_dash=A0_inv*Q0;
+
+
 Beta0=A0\Q0;
 Beta1=A1\Q1;
 
@@ -193,11 +199,23 @@ for i=1:size(1)
             Hmat(i,j)=h;
             T=(mu0.*H*H' - 0.5*mu0*(h^2).*eye(3));
             if isnan(T)==zeros(3)
-                % Unit vector in terms of 
-                rnhat=[sin(phi(i,j))*cos(theta(i,j));...
-                    sin(phi(i,j))*sin(theta(i,j));...
-                    cos(phi(i,j))];
-                f=f+a*a*T*rnhat*sin(theta(i,j))*p*q;
+
+                th=theta(i,j);
+                ph=phi(i,j);
+                % Unit position vector
+                rnhat=[sin(ph)*cos(th);...
+                    sin(ph)*sin(th);...
+                    cos(ph)];
+                % transformation matrices
+%                 pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
+%                     sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
+%                     cos(th),         -sin(th),         0];
+%                 post=[sin(th)*cos(ph), sin(th)*sin(ph),  cos(th);...
+%                     cos(th)*cos(ph), cos(th)*sin(ph), -sin(th);...
+%                     -sin(ph),        cos(ph),         0];
+                pre=eye(3);
+                post=eye(3);
+                f=f+a*a*pre*T*post*rnhat*sin(th)*p*q;
             else
                 T_check(i,j)=1;
             end
