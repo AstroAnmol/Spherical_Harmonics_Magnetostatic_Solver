@@ -6,7 +6,7 @@ susc = 0.96; % Magnetic susceptibility
 a = 1.4e-6;  % Grain radius, meters
 sep=2.2;
 alpha=0;
-L=10;       %Number of multipoles used
+L=1;       %Number of multipoles used
 
 %% Code to solve for coefficients
 
@@ -86,41 +86,19 @@ Beta2_1=Beta1(L+1:2*L);
 %% Computing the Magnetic Field
 
 %Legendre Polynomial for different values
-n=500;
-dx = pi/60;
-col = 0:dx:2*pi;
-r1 = linspace(a, 16*a, n);
-[theta,R] = meshgrid(col,r1);
+dang = pi/1800;
+col = dang:dang:pi;
+az = dang:dang:2*pi;
+r1=a;
+[phi,theta,R] = meshgrid(az,col,r1);
 
 
 Hrs=0;
 Hr=0;
-
-for l=1:L
-    for m=0:1
-        for s=m:L
-            Psm=legendre(s,cos(theta));
-            if s~=0
-                Psm=reshape(Psm(m+1,:,:),size(R));
-            end
-            Hrs=Hrs+ (-1)^(s+m) * nchoosek(l+s,s+m)*s.*(R.^(s-1)).*Psm/...
-                (sep^(l+s+1));
-        end
-        if m==0
-            Plm=legendre(l,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Hr=Hr+(l+1)*Beta1_0(l).*Plm./(R.^(l+2)) - Beta2_0(l)*Hrs;
-        elseif m==1
-            Plm=legendre(l,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Hr=Hr+(l+1)*Beta1_1(l).*Plm./(R.^(l+2)) - Beta2_1(l)*Hrs;
-        end
-    end
-end
-
-
 Hths=0;
 Hth=0;
+Hphis=0;
+Hphi=0;
 
 for l=1:L
     for m=0:1
@@ -130,9 +108,14 @@ for l=1:L
             if s~=0
                 Psm=reshape(Psm(m+1,:,:),size(R));
             end
+            
             Ps1m=reshape(Ps1m(m+1,:,:),size(R));
             %compute derivative of the associated legendre function
             dPsm=((m-s-1).*Ps1m + (s+1).*cos(theta).*Psm)./(-sin(theta));
+            % R component
+            Hrs=Hrs+ (-1)^(s+m) * nchoosek(l+s,s+m)*s.*(R.^(s-1)).*Psm/...
+                (sep^(l+s+1));
+            % Theta component
             Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm/...
                 (sep^(l+s+1));
         end
@@ -144,7 +127,13 @@ for l=1:L
             
             %compute derivative of the associated legendre function
             dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
-            Hth=Hth+Beta1_0(l).*Plm./(R.^(l+2)) - Beta2_0(l)*Hths;
+            % Theta Component
+            Hth=Hth+...
+                (Beta1_0(l).*dPlm./(R.^(l+2)) + Beta2_0(l)*Hths).*cos(m*phi);
+            % R Component
+            Hr=Hr+...
+                ((l+1)*Beta1_0(l).*Plm./(R.^(l+2)) -...
+                Beta2_0(l)*Hrs).*cos(m*phi);
         elseif m==1
             Plm=legendre(l,cos(theta));
             Pl1m=legendre(l+1,cos(theta));
@@ -153,17 +142,78 @@ for l=1:L
             
             %compute derivative of the associated legendre function
             dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
-            Hth=Hth+Beta1_1(l).*Plm./(R.^(l+2)) - Beta2_1(l)*Hths;
+            % Theta Component
+            Hth=Hth+...
+                (Beta1_1(l).*dPlm./(R.^(l+2)) + Beta2_1(l)*Hths).*cos(m*phi);
+            % R Component
+            Hr=Hr+...
+                ((l+1)*Beta1_1(l).*Plm./(R.^(l+2)) -...
+                Beta2_1(l)*Hrs).*cos(m*phi);
         end
     end
+end
+%Phi component
+for l=1:L
+    for s=1:L
+        Ps1=legendre(s,cos(theta));
+        Ps1=reshape(Ps1(2,:,:),size(R));
+        Hphis=Hphis+ (-1)^(1+s) * nchoosek(l+s,s+1).*(R.^(s-1)).*Ps1...
+            ./ (sin(theta).*sep^(l+s+1));
+    end
+    Pl1=legendre(l,cos(theta));
+    Pl1=reshape(Pl1(2,:,:),size(R));
+    Hphi=Hphi+...
+                ((l+1)*Beta1_1(l).*Pl1./(R.^(l+2)) -...
+                Beta2_1(l)*Hphis).*sin(phi);
 end
 
 %% Formulating the Maxwell Stress Tensor in Spherical Coordinates
 size=size(Hr);
+Hmat=zeros(size);
+T_check=zeros(size);
+f=0;
 for i=1:size(1)
+    if i==1 || i==size(1)
+        p=1;
+    elseif mod(i,2)~=0
+        p=2;
+    else
+        p=4;
+    end
     for j=1:size(2)
-        H=[Hr(i,j);Hth(i,j)];
-        h=norm(H);
-        sigma=(mu0.*H*H' - 0.5*(h^2).*eye(2));
+        if j==1 || j==size(2)
+            q=1;
+        elseif mod(j,2)~=0
+            q=2;
+        else
+            q=4;
+        end
+            H=[Hr(i,j);Hth(i,j);Hphi(i,j)];
+            h=norm(H);
+            Hmat(i,j)=h;
+            T=(mu0.*H*H' - 0.5*mu0*(h^2).*eye(3));
+            if isnan(T)==zeros(3)
+                % Unit vector in terms of 
+                rnhat=[sin(phi(i,j))*cos(theta(i,j));...
+                    sin(phi(i,j))*sin(theta(i,j));...
+                    cos(phi(i,j))];
+                f=f+a*a*T*rnhat*sin(theta(i,j))*p*q;
+            else
+                T_check(i,j)=1;
+            end
     end
 end
+f=f*dang*dang/9;
+f
+
+%% plot Magnetic Field
+% [x,y,z]=sph2cart(phi,theta, R);
+% 
+% figure;
+% pc = pcolor(squeeze(x(:,1,:))/a,squeeze(y(:,1,:))/a,squeeze(Hmat(:,1,:))); set(pc, 'EdgeColor', 'none');
+% xlim([-3 3]); ylim([-3 3]);
+% title('|H|');
+% xlabel('X');
+% ylabel('Y');
+% colorbar;
+
