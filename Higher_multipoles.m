@@ -1,10 +1,10 @@
 clear all;
 %% Inputs
 
-B0 = 6e-4;
-susc = 0.96; % Magnetic susceptibility
-a = 1.4e-6;  % Grain radius, meters
-sep=2.2;
+B0 = 4*pi*1e-07;%6e-4;
+susc = 1; % Magnetic susceptibility
+a = 1;%1.4e-6;  % Grain radius, meters
+sep=2;%2.2;
 alpha=0;
 L=1;       %Number of multipoles used
 
@@ -92,10 +92,11 @@ Beta2_1=Beta1(L+1:2*L);
 %% Computing the Magnetic Field
 
 %Legendre Polynomial for different values
-dang = pi/1800;
+dang = pi/900;
 col = dang:dang:pi;
 az = dang:dang:2*pi;
-r1=a;
+dr=a/100;
+r1=a-dr:dr:2.2*a;
 [phi,theta,R] = meshgrid(az,col,r1);
 
 
@@ -172,66 +173,74 @@ for l=1:L
                 ((l+1)*Beta1_1(l).*Pl1./(R.^(l+2)) -...
                 Beta2_1(l)*Hphis).*sin(phi);
 end
+%% plot Magnetic Field
+%[x,y,z]=sph2cart(phi,theta, R);
+x=R.*sin(theta).*sin(phi);
+y=R.*cos(phi);
+z=R.*cos(theta).*sin(phi);
+Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
+figure;
+Ang=360/4;
+pc=pcolor(squeeze(z(:,Ang,:))./a,squeeze(x(:,Ang,:))./a,squeeze(Hmat(:,Ang,:))); set(pc, 'EdgeColor', 'none');
+xlim([-3 3]); ylim([-3 3]);
+title('|H|');
+xlabel('X');
+ylabel('Y');
+colorbar;
+axis equal;
+xlim([-3 3]); ylim([-3 3]);
 
 %% Formulating the Maxwell Stress Tensor in Spherical Coordinates
-size=size(Hr);
-Hmat=zeros(size);
-T_check=zeros(size);
+Size=size(Hr);
+Hmat=zeros(Size);
+T_check=zeros(Size);
 f=0;
-for i=1:size(1)
-    if i==1 || i==size(1)
+for i=1:Size(1)
+    if i==1 || i==Size(1)
         p=1;
     elseif mod(i,2)~=0
         p=2;
     else
         p=4;
     end
-    for j=1:size(2)
-        if j==1 || j==size(2)
+    for j=1:Size(2)
+        if j==1 || j==Size(2)
             q=1;
         elseif mod(j,2)~=0
             q=2;
         else
             q=4;
         end
-            H=[Hr(i,j);Hth(i,j);Hphi(i,j)];
+            th=theta(i,j,2);
+            ph=phi(i,j,2);
+            %transformation matrix
+%             CART2SPH=[sin(th)*cos(ph), sin(th)*sin(ph), cos(th);...
+%                 cos(th)*cos(ph), cos(th)*sin(ph), -sin(th);...
+%                 -sin(ph), cos(ph), 0];
+            H=[Hr(i,j,2);Hth(i,j,2);Hphi(i,j,2)];% + CART2SPH*H0;
             h=norm(H);
             Hmat(i,j)=h;
             T=(mu0.*H*H' - 0.5*mu0*(h^2).*eye(3));
             if isnan(T)==zeros(3)
-
-                th=theta(i,j);
-                ph=phi(i,j);
                 % Unit position vector
                 rnhat=[sin(ph)*cos(th);...
                     sin(ph)*sin(th);...
                     cos(ph)];
                 % transformation matrices
-%                 pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
-%                     sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
-%                     cos(th),         -sin(th),         0];
-%                 post=[sin(th)*cos(ph), sin(th)*sin(ph),  cos(th);...
-%                     cos(th)*cos(ph), cos(th)*sin(ph), -sin(th);...
-%                     -sin(ph),        cos(ph),         0];
-                pre=eye(3);
-                post=eye(3);
+                pre=[sin(ph)*cos(th), cos(ph)*cos(th), -sin(th);...
+                    sin(ph)*sin(th), cos(th)*sin(th),  cos(th);...
+                    cos(ph),         -sin(ph),         0];
+                post=pre';
+%                 pre=eye(3);
+%                 post=eye(3);
                 f=f+a*a*pre*T*post*rnhat*sin(th)*p*q;
             else
-                T_check(i,j)=1;
+                T_check(i,j,2)=1;
             end
     end
 end
 f=f*dang*dang/9;
-f
+f/mu0
 
-%% plot Magnetic Field
-% [x,y,z]=sph2cart(phi,theta, R);
-% 
-% figure;
-% pc = pcolor(squeeze(x(:,1,:))/a,squeeze(y(:,1,:))/a,squeeze(Hmat(:,1,:))); set(pc, 'EdgeColor', 'none');
-% xlim([-3 3]); ylim([-3 3]);
-% title('|H|');
-% xlabel('X');
-% ylabel('Y');
-% colorbar;
+
 
