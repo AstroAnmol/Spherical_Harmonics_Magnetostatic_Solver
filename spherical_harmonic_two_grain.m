@@ -4,14 +4,14 @@ debug=0;
 
 mu0 = 4*pi*1e-07;
 mu = (1+susc)*mu0;
-Hmag = B0/(mu0);  % Applied magnetic field, A/m
+H0mag = B0/(mu0);  % Applied magnetic field, A/m
 sep=sep*a;
 
 R1=[0 0 sep]';
 R2=[0 0 0]';
 
-alpha = alpha*pi/180; % change angle into radians
-H0 = [Hmag*sin(alpha) 0 Hmag*cos(alpha)]'; % A/m
+alpha = deg2rad(alpha); % change angle into radians
+H0 =[H0mag*sin(alpha) 0 H0mag*cos(alpha)]'; % A/m
 
 % parallel and perpendicular components of the applied magnetic field
 H_perp=H0(1);
@@ -45,8 +45,8 @@ end
 q0=zeros(L,1);
 q1=zeros(L,1);
 
-q0(1)=H_prll*(a^3)*(1-mu/mu0);
-q1(1)=-H_perp*(a^3)*(1-mu/mu0);
+q0(1)=-H_prll*(a^3)*(1-mu/mu0);
+q1(1)=H_perp*(a^3)*(1-mu/mu0);
 
 % creating the 2L X 2L matrix
 
@@ -85,18 +85,15 @@ Beta2_1=Beta1(L+1:2*L);
 
 %Legendre Polynomial for different values
 dang = pi/180;
-col = dang:dang:2*pi;
-az = dang:dang:pi;
+inc = dang/2:dang:pi+dang/2;
+az = dang/2:dang:2*pi+dang/2;
 dr=a/100;
-r1=a-dr:dr:a+20*dr;
-[phi,theta,R] = meshgrid(az,col,r1);
+r1=a-dr:dr:a+dr;
+[theta,phi,R] = meshgrid(inc,az,r1);
 
 
-Hrs=0;
 Hr=0;
-Hths=0;
 Hth=0;
-Hphis=0;
 Hphi=0;
 
 for l=1:L
@@ -117,8 +114,8 @@ for l=1:L
             Hrs=Hrs+ (-1)^(s+m) * nchoosek(l+s,s+m)*s.*(R.^(s-1)).*Psm/...
                 (sep^(l+s+1));
             % Theta component
-            Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm/...
-                (sep^(l+s+1));
+            Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm./...
+                ((sep^(l+s+1)));
         end
         if m==0
             Plm=legendre(l,cos(theta));
@@ -130,7 +127,7 @@ for l=1:L
             dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
             % Theta Component
             Hth=Hth+...
-                (Beta1_0(l).*dPlm./(R.^(l+2)) + Beta2_0(l)*Hths).*cos(m*phi);
+                (Beta1_0(l).*dPlm./((R.^(l+2))) + Beta2_0(l)*Hths).*cos(m*phi);
             % R Component
             Hr=Hr+...
                 ((l+1)*Beta1_0(l).*Plm./(R.^(l+2)) -...
@@ -145,7 +142,7 @@ for l=1:L
             dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
             % Theta Component
             Hth=Hth+...
-                (Beta1_1(l).*dPlm./(R.^(l+2)) + Beta2_1(l)*Hths).*cos(m*phi);
+                (Beta1_1(l).*dPlm./((R.^(l+2))) + Beta2_1(l)*Hths).*cos(m*phi);
             % R Component
             Hr=Hr+...
                 ((l+1)*Beta1_1(l).*Plm./(R.^(l+2)) -...
@@ -159,79 +156,89 @@ for l=1:L
     for s=1:L
         Ps1=legendre(s,cos(theta));
         Ps1=reshape(Ps1(2,:,:),size(R));
-        Hphis=Hphis+ (-1)^(1+s) * nchoosek(l+s,s+1).*(R.^(s-1)).*Ps1...
-            ./ (sin(theta).*sep^(l+s+1));
+        Hphis=Hphis+ (-1)^(s+1) * nchoosek(l+s,s+1).*(R.^(s-1)).*Ps1...
+            ./(sin(theta).*(sep^(l+s+1)));
     end
     Pl1=legendre(l,cos(theta));
     Pl1=reshape(Pl1(2,:,:),size(R));
     Hphi=Hphi+...
-                ((l+1)*Beta1_1(l).*Pl1./(R.^(l+2)) -...
+                (Beta1_1(l).*Pl1./(sin(theta).*(R.^(l+2))) +...
                 Beta2_1(l)*Hphis).*sin(phi);
 end
+Hth=-Hth;
 %% plot Magnetic Field
-if(debug==1)
-%[x,y,z]=sph2cart(phi,theta, R);
-x=R.*sin(theta).*sin(phi);
-y=R.*cos(phi);
-z=R.*cos(theta).*sin(phi);
-% pre=[sin(ph)*cos(th), cos(ph)*cos(th), -sin(th);...
-%     sin(ph)*sin(th), cos(th)*sin(th),  cos(th);...
-%     cos(ph),         -sin(ph),         0];
+%Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
+size_R=size(R);
 
-Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
+if (debug==1)
+    x=R.*cos(phi).*sin(theta);
+    y=R.*sin(phi).*sin(theta);
+    z=R.*cos(theta);
+
+    H_tot_mag=zeros(size_R);
+for i=1:size_R(1)
+    for j=1:size_R(2)
+        for k=1:size_R(3)
+            ph=az(i);
+            th=inc(j);
+            %H_part_sph=[Hr(i,j,k);Hphi(i,j,k);Hth(i,j,k)];
+            %transformation matrix
+                pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
+                    sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
+                    cos(th),         -sin(th),         0];
+                post=pre';
+            H0_sph=post*H0;
+            H_sph=[Hr(i,j,k);Hth(i,j,k);Hphi(i,j,k)] + H0_sph;
+            H_tot_mag(i,j,k)=norm(H_sph);
+        end
+    end
+end
+
 figure;
-Ang=1*360/4;
-pc=pcolor(squeeze(z(:,Ang,:))./a,squeeze(x(:,Ang,:))./a,squeeze(Hmat(:,Ang,:))); set(pc, 'EdgeColor', 'none');
-xlim([-3 3]); ylim([-3 3]);
+Ang=1;
+pc=pcolor(squeeze(z(Ang,:,:))./a,squeeze(x(Ang,:,:))./a,squeeze(H_tot_mag(Ang,:,:))); set(pc, 'EdgeColor', 'none');
+colormap('hot');
+xlim([-2 2]); ylim([-1.5 1.5]);
 title('|H|');
-xlabel('z');
-ylabel('x');
+xlabel('x');
+ylabel('y');
 colorbar;
 axis equal;
 grid on;
-xlim([-3 3]); ylim([-3 3]);
 end
 %% Formulating the Maxwell Stress Tensor in Spherical Coordinates
-Size_col=size(col);
-Size_az=size(az);
-fx=0;
-fy=0;
-fz=0;
-for i=1:Size_col(2)
-    if i==1 || i==Size_col(2)
+f=0;
+for i=1:size_R(1)
+    if i==1 || i==size_R(1)
         p=1;
     elseif mod(i,2)~=0
         p=2;
     else
         p=4;
     end
-    for j=1:Size_az(2)
-        if j==1 || j==Size_az(2)
+    for j=1:size_R(2)
+        if j==1 || j==size_R(2)
             q=1;
         elseif mod(j,2)~=0
             q=2;
         else
             q=4;
         end
-            th=col(i);
-            ph=az(j);
+            ph=az(i);
+            th=inc(j);
             %transformation matrix
-                pre=[sin(ph)*cos(th), cos(ph)*cos(th), -sin(th);...
-                    sin(ph)*sin(th), cos(th)*sin(th),  cos(th);...
-                    cos(ph),         -sin(ph),         0];
-            H_sph=[Hr(i,j,2);Hphi(i,j,2);Hth(i,j,2)];% + CART2SPH*H0;
+                pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
+                    sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
+                    cos(th),         -sin(th),         0];
+                post=pre';
+            H0_sph=post*H0;
+            H_sph=[Hr(i,j,2);Hth(i,j,2);Hphi(i,j,2)] + H0_sph;
             H_cart=pre*H_sph;
-            h=norm(H_sph);
-            %Hmat(i,j)=h;
-            Txr=mu0*H_cart(2)*H_sph(1);
-            Tyr=mu0*H_cart(3)*H_sph(1);
-            Tzr=mu0*H_cart(1)*H_sph(1);
-            fx=fx+a*a*Txr*sin(ph)*p*q;
-            fy=fy+a*a*Tyr*sin(ph)*p*q;
-            fz=fz+a*a*Tzr*sin(ph)*p*q;
-            
+            h=norm(H_cart);
+            T_cart=mu0*(H_cart*H_cart' - 0.5*h^2*eye(3,3));
+            rn_hat=[sin(th)*cos(ph),sin(th)*sin(ph),cos(th)]';
+            f=f+a*a*T_cart*rn_hat*sin(th)*p*q;                  
     end
 end
-f=[fx, fy, fz];
 f=f*dang*dang/9;
 end

@@ -2,22 +2,29 @@ clear all;
 
 %% Inputs
 mu0 = 4*pi*1e-07;
-B0 = 6e-4;%4*pi*1e-07;
+B0 = 6e-4;
 susc = 0.96; % Magnetic susceptibility
 a = 1.4e-6;  % Grain radius, meters
-sep=2;%2.2;
-alpha=0;
+sep=2.2;
+alpha=90;
 L=10;       %Number of multipoles used
 
 %%
-sep=2:0.2:5;
-for i=1:16
+
+f=spherical_harmonic_two_grain(B0,susc, a, sep, alpha, L)
+%%
+fmag=zeros(1,12);
+sep=2:0.2:4.2;
+for i=1:12
+    fprintf('%i ',i);
     f=spherical_harmonic_two_grain(B0,susc, a, sep(i), alpha, L);
     fmag(i)=f(3);
 end
+
+save('keaveny_1_parallel.mat');
 %%
 figure(1);
-plot(sep(1:10), fmag/2);
+plot(sep, -fmag/mu0);
 
 
 % l=5;
