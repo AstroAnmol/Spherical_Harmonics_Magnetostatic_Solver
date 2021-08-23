@@ -10,7 +10,6 @@ alpha=0;        % Magnetic Field Direction
 L=10;           % Number of multipoles used
 debug_mag=0;    % If 1 plots magnetic field magnitude for each L
 debug_f_L=1;    % If 1 plots z component of force with L
-%% Code to solve for coefficients
 
 mu = (1+susc)*mu0;
 H0mag = B0/(mu0);  % Applied magnetic field, A/m
@@ -26,6 +25,58 @@ H0 =[H0mag*sin(alpha) 0 H0mag*cos(alpha)]'; % A/m
 H_perp=H0(1);
 H_prll=H0(3);
 
+% %% Solve for coefficients (derived result)
+% for m=0:1
+%     % vectors for diagonal LXL matrices
+%     xm=zeros(1,L);
+%     bm=zeros(1,L);
+%     cm=zeros(1,L);
+%     % q vector
+%     qm=zeros(L,1);
+%     for l=1:L
+%         Xl=(mu/mu0)*l + l + 1;
+%         Bl=0;
+%         Cl=0;
+%         for s=1:L
+%             Bl= Bl + ((-1)^(s+m))*nchoosek(l+s,s+m)*(a^(2*l+a)/(sep^(l+s+1)))*((mu/mu0)*l-l);
+%             Cl= Cl + ((-1)^(l+s))*((-1)^(s+m))*nchoosek(l+s,s+m)*(a^(2*l+a)/(sep^(l+s+1)))*((mu/mu0)*l-l);
+%         end
+%         xm(l)=Xl;
+%         bm(l)=Bl;
+%         cm(l)=Cl;
+%     end
+%     % LXL matrices
+%     Xm=diag(xm);
+%     Bm=diag(bm);
+%     Cm=diag(cm);
+%     %% 2LX2L matrix
+%     Am=zeros(2*L);
+%     Am(1:L,1:L)=Xm;
+%     Am(L+1:end,1:L)=Bm;
+%     Am(1:L,L+1:end)=Cm;
+%     Am(L+1:end,L+1:end)=Xm;
+%     % q vector
+%     if m==0
+%         qm(1)=-H_prll*(a^3)*(1-mu/mu0);
+%     elseif m==1
+%         qm(1)=H_perp*(a^3)*(1-mu/mu0);
+%     end
+%     % 2L Q vector
+%     Qm=[qm;qm];
+%     %Solve linear equations
+%     Beta_m=Am\Qm;
+%     Beta1_m=Beta_m(1:L);
+%     Beta2_m=Beta_m(L+1:2*L);
+%     if m==0
+%         Beta1_0=Beta1_m;
+%         Beta2_0=Beta2_m;
+%     elseif m==1
+%         Beta1_1=Beta1_m;
+%         Beta2_1=Beta2_m;
+%     end
+% end
+
+%% Code to solve for coefficients (using paper)
 % Creating the L X L matrices 
 X=zeros(L,L);
 Delta0=zeros(L,L);
