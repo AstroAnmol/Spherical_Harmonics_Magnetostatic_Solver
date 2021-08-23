@@ -91,7 +91,7 @@ dr=a/100;
 r1=a-dr:dr:a+dr;
 [theta,phi,R] = meshgrid(inc,az,r1);
 
-
+ 
 Hr=0;
 Hth=0;
 Hphi=0;
@@ -105,9 +105,9 @@ for l=1:L
             Psm=legendre(s,cos(theta));
             Ps1m=legendre(s+1,cos(theta));
             if s~=0
-                Psm=reshape(Psm(m+1,:,:),size(R));
+                Psm=reshape(Psm(m+1,:,:,:),size(R));
             end
-            Ps1m=reshape(Ps1m(m+1,:,:),size(R));
+            Ps1m=reshape(Ps1m(m+1,:,:,:),size(R));
             %compute derivative of the associated legendre function
             dPsm=((m-s-1).*Ps1m + (s+1).*cos(theta).*Psm)./(-sin(theta));
             % R component
@@ -117,14 +117,15 @@ for l=1:L
             Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm./...
                 ((sep^(l+s+1)));
         end
-        if m==0
-            Plm=legendre(l,cos(theta));
+        Plm=legendre(l,cos(theta));
             Pl1m=legendre(l+1,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
+            Plm=reshape(Plm(m+1,:,:,:),size(R));
+            Pl1m=reshape(Pl1m(m+1,:,:,:),size(R));
             
             %compute derivative of the associated legendre function
             dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
+            
+        if m==0
             % Theta Component
             Hth=Hth+...
                 (Beta1_0(l).*dPlm./((R.^(l+2))) + Beta2_0(l)*Hths).*cos(m*phi);
@@ -133,13 +134,6 @@ for l=1:L
                 ((l+1)*Beta1_0(l).*Plm./(R.^(l+2)) -...
                 Beta2_0(l)*Hrs).*cos(m*phi);
         elseif m==1
-            Plm=legendre(l,cos(theta));
-            Pl1m=legendre(l+1,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
-            
-            %compute derivative of the associated legendre function
-            dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
             % Theta Component
             Hth=Hth+...
                 (Beta1_1(l).*dPlm./((R.^(l+2))) + Beta2_1(l)*Hths).*cos(m*phi);
@@ -155,12 +149,12 @@ for l=1:L
     Hphis=0;
     for s=1:L
         Ps1=legendre(s,cos(theta));
-        Ps1=reshape(Ps1(2,:,:),size(R));
+        Ps1=reshape(Ps1(2,:,:,:),size(R));
         Hphis=Hphis+ (-1)^(s+1) * nchoosek(l+s,s+1).*(R.^(s-1)).*Ps1...
             ./(sin(theta).*(sep^(l+s+1)));
     end
     Pl1=legendre(l,cos(theta));
-    Pl1=reshape(Pl1(2,:,:),size(R));
+    Pl1=reshape(Pl1(2,:,:,:),size(R));
     Hphi=Hphi+...
                 (Beta1_1(l).*Pl1./(sin(theta).*(R.^(l+2))) +...
                 Beta2_1(l)*Hphis).*sin(phi);
