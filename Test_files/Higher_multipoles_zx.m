@@ -1,16 +1,17 @@
 clear all;
 %% Inputs
 
-B0 = 6e-4;%4*pi*1e-07;
-susc = 0.96; % Magnetic susceptibility
-a = 1.4e-6;  % Grain radius, meters
-sep=2;
-alpha=90;
-L=10;       %Number of multipoles used
-
+mu0 = 4*pi*1e-07;
+B0 = mu0;       %4*pi*1e-07;
+susc = 1;       % Magnetic susceptibility
+a = 1;          % Grain radius, meters
+sep=2;          % Separation between the grains in terms of radius 
+alpha=0;        % Magnetic Field Direction
+L=10;           % Number of multipoles used
+debug_mag=0;    % If 1 plots magnetic field magnitude for each L
+debug_f_L=1;    % If 1 plots z component of force with L
 %% Code to solve for coefficients
 
-mu0 = 4*pi*1e-07;
 mu = (1+susc)*mu0;
 H0mag = B0/(mu0);  % Applied magnetic field, A/m
 sep=sep*a;
@@ -91,14 +92,27 @@ Beta2_1=Beta1(L+1:2*L);
 
 %% Computing the Magnetic Field
 
-%Legendre Polynomial for different values
-dang = pi/180;
+%Create a 3D spherical mesh
+dang = pi/18;
 inc = dang/2:dang:pi+dang/2;
 az = dang/2:dang:2*pi+dang/2;
 dr=a/100;
-r1=a-dr:dr:a+20*dr;
+r1=a-dr:dr:a+dr;
 [theta,phi,R] = meshgrid(inc,az,r1);
 
+%Convert the spherical mesh to cartesian
+x=R.*cos(phi).*sin(theta);
+y=R.*sin(phi).*sin(theta);
+z=R.*cos(theta);
+
+%define size parameters
+size_R=size(R); %size of all elements in 3D space
+size_H=size_R; 
+size_H(1,4)=L; %size for 4D mag arrays
+
+Hr_L=zeros(size_H);
+Hth_L=zeros(size_H);
+Hphi_L=zeros(size_H);
 
 Hr=0;
 Hth=0;
@@ -157,6 +171,8 @@ for l=1:L
                 Beta2_1(l)*Hrs).*cos(m*phi);
         end
     end
+    Hr_L(:,:,:,l)=Hr;
+    Hth_L(:,:,:,l)=-Hth;
 end
 %Phi component
 for l=1:L
@@ -172,86 +188,91 @@ for l=1:L
     Hphi=Hphi+...
                 (Beta1_1(l).*Pl1./(sin(theta).*(R.^(l+2))) +...
                 Beta2_1(l)*Hphis).*sin(phi);
+
+    Hphi_L(:,:,:,l)=Hphi;
 end
 Hth=-Hth;
+
 %% plot Magnetic Field
-
-Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
-x=R.*cos(phi).*sin(theta);
-y=R.*sin(phi).*sin(theta);
-z=R.*cos(theta);
-
-size_R=size(R);
-H_tot_mag=zeros(size_R);
-
-for i=1:size_R(1)
-    for j=1:size_R(2)
-        for k=1:size_R(3)
-            ph=az(i);
-            th=inc(j);
-            %H_part_sph=[Hr(i,j,k);Hphi(i,j,k);Hth(i,j,k)];
-            %transformation matrix
-                pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
-                    sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
-                    cos(th),         -sin(th),         0];
-                post=pre';
-            H0_sph=post*H0;
-            H_sph=[Hr(i,j,k);Hth(i,j,k);Hphi(i,j,k)] + H0_sph;
-            H_tot_mag(i,j,k)=norm(H_sph);
+if debug_mag==1
+    for l=1:L
+        H_tot_mag=zeros(size_R);
+        for i=1:size_R(1)
+            for j=1:size_R(2)
+                for k=1:size_R(3)
+                    ph=az(i);
+                    th=inc(j);
+                    %H_part_sph=[Hr(i,j,k);Hphi(i,j,k);Hth(i,j,k)];
+                    %transformation matrix
+                    pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
+                        sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
+                        cos(th),         -sin(th),         0];
+                    post=pre';
+                    H0_sph=post*H0;
+                    H_sph=[Hr_L(i,j,k,l);Hth_L(i,j,k,l);Hphi_L(i,j,k,l)] + H0_sph;
+                    H_tot_mag(i,j,k)=norm(H_sph);
+                end
+            end
         end
+        figure();
+        Ang=1;
+        pc=pcolor(squeeze(z(Ang,:,:))./a,squeeze(x(Ang,:,:))./a,squeeze(H_tot_mag(Ang,:,:))); set(pc, 'EdgeColor', 'none');
+        colormap('hot');
+        xlim([-2 2]); ylim([-1.5 1.5]);
+        title('|H|');
+        xlabel('x');
+        ylabel('y');
+        colorbar;
+        axis equal;
+        grid on;
     end
 end
 
-figure;
-Ang=1;
-pc=pcolor(squeeze(z(Ang,:,:))./a,squeeze(x(Ang,:,:))./a,squeeze(H_tot_mag(Ang,:,:))); set(pc, 'EdgeColor', 'none');
-colormap('hot');
-xlim([-2 2]); ylim([-1.5 1.5]);
-title('|H|');
-xlabel('x');
-ylabel('y');
-colorbar;
-axis equal;
-grid on;
-
 %% Formulating the Maxwell Stress Tensor in Spherical Coordinates
-fx=0;
-fy=0;
-fz=0;
-f=0;
-for i=1:size_R(1)
-    if i==1 || i==size_R(1)
-        p=1;
-    elseif mod(i,2)~=0
-        p=2;
-    else
-        p=4;
-    end
-    for j=1:size_R(2)
-        if j==1 || j==size_R(2)
-            q=1;
-        elseif mod(j,2)~=0
-            q=2;
+f_L=zeros(3,1,L);
+for l=1:L
+    f=0;
+    for i=1:size_R(1)
+        if i==1 || i==size_R(1)
+            p=1;
+        elseif mod(i,2)~=0
+            p=2;
         else
-            q=4;
+            p=4;
         end
+        for j=1:size_R(2)
+            if j==1 || j==size_R(2)
+                q=1;
+            elseif mod(j,2)~=0
+                q=2;
+            else
+                q=4;
+            end
             ph=az(i);
             th=inc(j);
             %transformation matrix
-                pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
-                    sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
-                    cos(th),         -sin(th),         0];
-                post=pre';
+            pre=[sin(th)*cos(ph), cos(th)*cos(ph), -sin(ph);...
+                sin(th)*sin(ph), cos(th)*sin(ph),  cos(ph);...
+                cos(th),         -sin(th),         0];
+            post=pre';
             H0_sph=post*H0;
-            H_sph=[Hr(i,j,2);Hth(i,j,2);Hphi(i,j,2)] + H0_sph;
+            H_sph=[Hr_L(i,j,2,l);Hth_L(i,j,2,l);Hphi_L(i,j,2,l)] + H0_sph;
             H_cart=pre*H_sph;
             h=norm(H_cart);
             T_cart=mu0*(H_cart*H_cart' - 0.5*h^2*eye(3,3));
             rn_hat=[sin(th)*cos(ph),sin(th)*sin(ph),cos(th)]';
             f=f+a*a*T_cart*rn_hat*sin(th)*p*q;
-                     
+        end          
     end
+    f=f*dang*dang/9;
+    f_L(:,:,l)=f;
 end
-% f=[fx, fy, fz];
-f=f*dang*dang/9;
-f
+
+if debug_f_L==1
+    figure()
+    plot(1:L,squeeze(f_L(3,1,:)))
+    title('Z component of force vs L (multipoles)')
+    xlabel('L')
+    ylabel('f_z (N)')
+    grid on
+end
