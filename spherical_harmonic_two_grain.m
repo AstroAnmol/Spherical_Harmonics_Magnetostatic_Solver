@@ -1,6 +1,4 @@
-function f=spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L)
-
-debug=0;
+function f=spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L, debug_mag)
 
 mu0 = 4*pi*1e-07;
 mu = (1+susc)*mu0;
@@ -83,7 +81,7 @@ Beta2_1=Beta1(L+1:2*L);
 
 %% Computing the Magnetic Field
 
-%Legendre Polynomial for different values
+% Create 3D spherical mesh
 dang = pi/180;
 inc = dang/2:dang:pi+dang/2;
 az = dang/2:dang:2*pi+dang/2;
@@ -91,7 +89,7 @@ dr=a/100;
 r1=a-dr:dr:a+dr;
 [theta,phi,R] = meshgrid(inc,az,r1);
 
- 
+
 Hr=0;
 Hth=0;
 Hphi=0;
@@ -164,7 +162,7 @@ Hth=-Hth;
 %Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
 size_R=size(R);
 
-if (debug==1)
+if debug_mag==1
     x=R.*cos(phi).*sin(theta);
     y=R.*sin(phi).*sin(theta);
     z=R.*cos(theta);

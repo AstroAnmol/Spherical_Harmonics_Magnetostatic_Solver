@@ -6,7 +6,7 @@ B0 = mu0;%6e-4;
 susc = 1;%0.96; % Magnetic susceptibility
 a = 1;%.4e-6;  % Grain radius, meters
 sep=2;    
-alpha=90;
+alpha=0;
 L=10;       % Number of multipoles used
 
 %%
