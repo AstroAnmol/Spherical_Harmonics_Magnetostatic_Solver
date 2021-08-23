@@ -77,69 +77,51 @@ H_prll=H0(3);
 % end
 
 %% Code to solve for coefficients (using paper)
-% Creating the L X L matrices 
-X=zeros(L,L);
-Delta0=zeros(L,L);
-Gamma0=zeros(L,L);
-Delta1=zeros(L,L);
-Gamma1=zeros(L,L);
-for i=1:L
-    for j=1:L
-        % X matrix
-        if i==j
-            X(i,j)= i*(mu/mu0) + i +1;
+for m=0:1
+    % Creating the L X L matrices 
+    X=zeros(L,L);
+    Delta_m=zeros(L,L);
+    Gamma_m=zeros(L,L);
+    for i=1:L
+        for j=1:L
+            % X matrix
+            if i==j
+                X(i,j)= i*(mu/mu0) + i +1;
+            end
+            % Delta and Gamma matrix
+            Delta_m(i,j)= ((-1)^(i+m))*(i*(mu/mu0)-i)*nchoosek(i+j,j+m)*...
+                (a^(2*i+1))/(sep^(i+j+1));
+            Gamma_m(i,j)= ((-1)^(i+j))*Delta_m(i,j);
         end
-        % Delta and Gamma matrix for m=0
-        Delta0(i,j)= ((-1)^(i))*(i*(mu/mu0)-i)*nchoosek(i+j,j)*...
-            (a^(2*i+1))/(sep^(i+j+1));
-        Gamma0(i,j)= ((-1)^(i+j))*Delta0(i,j);
-        
-        % Delta and Gamma matrix for m=1
-        Delta1(i,j)= ((-1)^(i+1))*(i*(mu/mu0)-i)*nchoosek(i+j,j+1)*...
-            (a^(2*i+1))/(sep^(i+j+1));
-        Gamma1(i,j)= ((-1)^(i+j))*Delta1(i,j);
+    end
+    % 2LX2L matrix
+    Am=zeros(2*L);
+    Am(1:L,1:L)=X;
+    Am(L+1:end,1:L)=Gamma_m;
+    Am(1:L,L+1:end)=Delta_m;
+    Am(L+1:end,L+1:end)=X;
+    
+    % q vector
+    qm=zeros(L,1);
+    if m==0
+        qm(1)=-H_prll*(a^3)*(1-mu/mu0);
+    elseif m==1
+        qm(1)=H_perp*(a^3)*(1-mu/mu0);
+    end
+    % 2L Q vector
+    Qm=[qm;qm];
+    %Solve linear equations
+    Beta_m=Am\Qm;
+    Beta1_m=Beta_m(1:L);
+    Beta2_m=Beta_m(L+1:2*L);
+    if m==0
+        Beta1_0=Beta1_m;
+        Beta2_0=Beta2_m;
+    elseif m==1
+        Beta1_1=Beta1_m;
+        Beta2_1=Beta2_m;
     end
 end
-
-% q vectors for m =0,1
-q0=zeros(L,1);
-q1=zeros(L,1);
-
-q0(1)=-H_prll*(a^3)*(1-mu/mu0);
-q1(1)=H_perp*(a^3)*(1-mu/mu0);
-
-% creating the 2L X 2L matrix
-
-A0=zeros(2*L);
-A1=zeros(2*L);
-
-A0(1:L,1:L)=X;
-A0(L+1:end,1:L)=Gamma0;
-A0(1:L,L+1:end)=Delta0;
-A0(L+1:end,L+1:end)=X;
-
-
-A1(1:L,1:L)=X;
-A1(L+1:end,1:L)=Gamma1;
-A1(1:L,L+1:end)=Delta1;
-A1(L+1:end,L+1:end)=X;
-
-Q0=[q0;q0];
-Q1=[q1;q1];
-
-% %Using SVD to solve the linear system
-% [U0,S0,V0] = svd(A0);
-% A0_inv=V0*inv(S0)*U0';
-% Beta0_dash=A0_inv*Q0;
-
-
-Beta0=A0\Q0;
-Beta1=A1\Q1;
-
-Beta1_0=Beta0(1:L);
-Beta2_0=Beta0(L+1:2*L);
-Beta1_1=Beta1(1:L);
-Beta2_1=Beta1(L+1:2*L);
 
 %% Computing the Magnetic Field
 
