@@ -6,25 +6,25 @@ B0 = mu0;%6e-4;
 susc = 1;%0.96; % Magnetic susceptibility
 a = 1;%.4e-6;  % Grain radius, meters
 sep=2;    
-alpha=0;
+alpha=90;
 L=10;       % Number of multipoles used
-
+debug_mag=0;
 %%
 
- f=spherical_harmonic_two_grain(B0,susc, a, sep, alpha, L)
+% f=spherical_harmonic_two_grain(B0,susc, a, sep, alpha, L, debug_mag)
+%%
+sep=2:0.2:4.2;
+for i=1:19
+    fprintf('%i ', i);
+    f=spherical_harmonic_two_grain(B0,susc, a, sep(i), alpha, L, debug_mag);
+    fmag_perp_1(i)=f(3);
+end
 % %%
-% sep=2:0.2:4.2;
-% for i=1:19
-%     fprintf('%i ', i);
-%     f=spherical_harmonic_two_grain(B0,susc, a, sep(i), alpha, L);
-%     fmag_perp_1(i)=f(3);
-% end
-% %%
-% figure()
-% plot(sep,fmag_perp_1(1:12));
-% xlabel('sep (a)');
-% ylabel('f_z (N)');
-% title('H=1 (perpendicular), mu=1, a=1, L=10');
+figure()
+plot(sep,fmag_perp_1(1:12));
+xlabel('sep (a)');
+ylabel('f_z (N)');
+title('H=1 (perpendicular), mu=1, a=1, L=10');
 % %%
 % fprintf('Particle Size Perpedicular 01\n');
 % susc=1;

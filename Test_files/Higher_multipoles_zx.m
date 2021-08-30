@@ -6,7 +6,7 @@ B0 = mu0;       %4*pi*1e-07;
 susc = 1;       % Magnetic susceptibility
 a = 1;          % Grain radius, meters
 sep=2;          % Separation between the grains in terms of radius 
-alpha=0;        % Magnetic Field Direction
+alpha=90;        % Magnetic Field Direction
 L=10;           % Number of multipoles used
 debug_mag=0;    % If 1 plots magnetic field magnitude for each L
 debug_f_L=1;    % If 1 plots z component of force with L
@@ -88,8 +88,8 @@ for m=0:1
             if i==j
                 X(i,j)= i*(mu/mu0) + i +1;
             end
-            % Delta and Gamma matrix
-            Delta_m(i,j)= ((-1)^(i+m))*(i*(mu/mu0)-i)*nchoosek(i+j,j+m)*...
+            % Delta and Gamma matrix (paper: nchoosek(i+j,j+m))
+            Delta_m(i,j)= ((-1)^(i+m))*(i*(mu/mu0)-i)*nchoosek(i+j,j-m)*...
                 (a^(2*i+1))/(sep^(i+j+1));
             Gamma_m(i,j)= ((-1)^(i+j))*Delta_m(i,j);
         end
@@ -172,14 +172,14 @@ for l=1:L
             Hths=Hths+ (-1)^(s+m) * nchoosek(l+s,s+m).*(R.^(s-1)).*dPsm./...
                 ((sep^(l+s+1)));
         end
+
+        Plm=legendre(l,cos(theta));
+        Pl1m=legendre(l+1,cos(theta));
+        Plm=reshape(Plm(m+1,:,:),size(R));
+        Pl1m=reshape(Pl1m(m+1,:,:),size(R));
+        %compute derivative of the associated legendre function
+        dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
         if m==0
-            Plm=legendre(l,cos(theta));
-            Pl1m=legendre(l+1,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
-            
-            %compute derivative of the associated legendre function
-            dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
             % Theta Component
             Hth=Hth+...
                 (Beta1_0(l).*dPlm./((R.^(l+2))) + Beta2_0(l)*Hths).*cos(m*phi);
@@ -188,13 +188,6 @@ for l=1:L
                 ((l+1)*Beta1_0(l).*Plm./(R.^(l+2)) -...
                 Beta2_0(l)*Hrs).*cos(m*phi);
         elseif m==1
-            Plm=legendre(l,cos(theta));
-            Pl1m=legendre(l+1,cos(theta));
-            Plm=reshape(Plm(m+1,:,:),size(R));
-            Pl1m=reshape(Pl1m(m+1,:,:),size(R));
-            
-            %compute derivative of the associated legendre function
-            dPlm=((m-l-1).*Pl1m + (l+1).*cos(theta).*Plm)./(-sin(theta));
             % Theta Component
             Hth=Hth+...
                 (Beta1_1(l).*dPlm./((R.^(l+2))) + Beta2_1(l)*Hths).*cos(m*phi);
@@ -219,8 +212,8 @@ for l=1:L
     Pl1=legendre(l,cos(theta));
     Pl1=reshape(Pl1(2,:,:),size(R));
     Hphi=Hphi+...
-                (Beta1_1(l).*Pl1./(sin(theta).*(R.^(l+2))) +...
-                Beta2_1(l)*Hphis).*sin(phi);
+        (Beta1_1(l).*Pl1./(sin(theta).*(R.^(l+2))) +...
+        Beta2_1(l)*Hphis).*sin(phi);
 
     Hphi_L(:,:,:,l)=Hphi;
 end

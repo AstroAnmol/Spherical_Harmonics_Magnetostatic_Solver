@@ -33,7 +33,7 @@ for i=1:L
         Gamma0(i,j)= ((-1)^(i+j))*Delta0(i,j);
         
         % Delta and Gamma matrix for m=1
-        Delta1(i,j)= ((-1)^(i+1))*(i*(mu/mu0)-i)*nchoosek(i+j,j+1)*...
+        Delta1(i,j)= ((-1)^(i+1))*(i*(mu/mu0)-i)*nchoosek(i+j,j-1)*...
             (a^(2*i+1))/(sep^(i+j+1));
         Gamma1(i,j)= ((-1)^(i+j))*Delta1(i,j);
     end
