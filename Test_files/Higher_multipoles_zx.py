@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.special import comb
-
+from scipy.special import lpmn
 # def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L, debug_mag):
 
 mu0 = 4*np.pi*1e-07
@@ -95,10 +95,11 @@ Hr=0
 Hth=0
 Hphi=0
 
-for l in range(L):
+for l in np.arange(1,L+1):
     for m in range(1):
         Hrs=0
         Hths=0
+        # for s in np.arange(m,L+1):
 
-# print(np.shape(Qm))
+print(lpmn(10,10,np.array([0.1,0.2,0.3]))[0])
 
