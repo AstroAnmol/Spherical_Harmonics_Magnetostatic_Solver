@@ -9,7 +9,7 @@ susc = 1
 a = 1      
 sep=2   
 alpha=0 
-L=30   
+L=10   
 
 mu0 = 4*np.pi*1e-07
 mu = (1+susc)*mu0
@@ -55,8 +55,50 @@ for m in range(1):
         qm[0,0]=H_perp*(a**3)*(1-mu/mu0)
         
     # 2L Q vector
-    Qm=np.array([qm,qm])
+    Qm=np.append(qm, qm)
 
-# print(qm)
+    #solve linear equations
+    Beta_m=np.linalg.solve(Am,Qm)
+    Beta1_m=Beta_m[0:L]
+    Beta2_m=Beta_m[L:]
+    if m==0:
+        Beta1_0=Beta1_m
+        Beta2_0=Beta2_m
+    elif m==1:
+        Beta1_1=Beta1_m
+        Beta2_1=Beta2_m
 
+## Computing Magnetic Field
+
+#Create a 3D spherical mesh
+dang= np.pi/18.0
+inc= np.arange(dang/2, np.pi + dang/2, dang)
+az= np.arange(dang/2, 2*np.pi + dang/2, dang)
+dr= a/100.0
+r1= np.arange(a-dr,a+dr,dr)
+theta, phi, R=np.meshgrid(inc,az,r1)
+
+#Convert the spherical mesh to cartesian
+x= np.multiply(R,np.multiply(np.cos(phi),np.sin(theta)))
+y= np.multiply(R,np.multiply(np.sin(phi),np.sin(theta)))
+z= np.multiply(R,np.cos(theta))
+
+#define size parameters
+size_R=np.shape(R) #size of all elements in 3D space
+size_H=np.append(size_R,L) #size for 4D mag arrays
+
+Hr_L=np.zeros(size_H)
+Hth_L=np.zeros(size_H)
+Hphi_L=np.zeros(size_H)
+
+Hr=0
+Hth=0
+Hphi=0
+
+for l in range(L):
+    for m in range(1):
+        Hrs=0
+        Hths=0
+
+# print(np.shape(Qm))
 
