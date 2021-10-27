@@ -1,6 +1,16 @@
 import numpy as np
 from scipy.special import comb
 from scipy.special import lpmn
+
+
+@np.vectorize
+def lpmn_arr(m, n, x):
+    return lpmn(m, n, x)[0][-1, -1]
+@np.vectorize
+def d_lpmn_arr(m, n, x):
+    return lpmn(m, n, x)[1][-1, -1]
+
+
 # def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L, debug_mag):
 
 mu0 = 4*np.pi*1e-07
@@ -16,18 +26,18 @@ mu = (1+susc)*mu0
 H0mag = B0/(mu0)  # Applied magnetic field, A/m
 sep=sep*a
 
-R1=np.array([0, 0, sep])
-R2=np.array([0, 0, 0])
+R1=np.array([[0], [0], [sep]])
+R2=np.array([[0], [0], [0]])
 
 alpha = np.deg2rad(alpha) #change angle into radians
-H0 = np.array([H0mag*np.sin(alpha), 0, H0mag*np.cos(alpha)]) # A/m
+H0 = np.array([[H0mag*np.sin(alpha)], [0], [H0mag*np.cos(alpha)]]) # A/m
 
 # parallel and perpendicular components of the applied magnetic field
 H_perp=H0[0]
 H_prll=H0[2]
 
 # Code to solve for coefficients (using paper)
-for m in range(1):
+for m in range(2):
     # Creating the L X L matrices
     X=np.zeros((L,L))
     Delta_m=np.zeros((L,L))
@@ -99,7 +109,83 @@ for l in np.arange(1,L+1):
     for m in range(1):
         Hrs=0
         Hths=0
-        # for s in np.arange(m,L+1):
+        for s in np.arange(m,L+1):
+            Psm=lpmn_arr(m,s,np.cos(theta))
+            dPsm=d_lpmn_arr(m,s,np.cos(theta))
+            # R component
+            Hrs=Hrs + ((-1)**(s+m)) * comb(l+s,s+m)*s*np.multiply(np.power(R,s-1),Psm)/ (sep**(l+s+1))
+            # Theta component
+            Hths=Hths + ((-1)**(s+m)) * comb(l+s,s+m)*np.multiply(np.power(R,(s-1)),dPsm)/((sep**(l+s+1)))
 
-print(lpmn(10,10,np.array([0.1,0.2,0.3]))[0])
+        Plm=lpmn_arr(m,l,np.cos(theta))
+        dPlm=d_lpmn_arr(m,l,np.cos(theta))
+        if m==0:
+            # R Component
+            Hr=Hr + np.multiply(((l+1)*Beta1_0[l-1]*np.divide(Plm,np.power(R,(l+2))) -  Beta2_0[l-1]*Hrs),np.cos(m*phi))
+            # Theta component
+            Hth=Hth + np.multiply((Beta1_0[l-1]*np.divide(dPlm,np.power(R,(l+2))) + Beta2_0[l-1]*Hths),np.cos(m*phi))
+        elif m==1:
+            # R Component
+            Hr=Hr + np.multiply(((l+1)*Beta1_1[l-1]*np.divide(Plm,np.power(R,(l+2))) -  Beta2_1[l-1]*Hrs),np.cos(m*phi))
+            # Theta component
+            Hth=Hth + np.multiply((Beta1_1[l-1]*np.divide(dPlm,np.power(R,(l+2))) + Beta2_1[l-1]*Hths),np.cos(m*phi))
+    Hr_L[:,:,:,l-1]=Hr
+    Hth_L[:,:,:,l-1]=-Hth
 
+# Phi compenent
+for l in np.arange(1,L+1):
+    Hphis=0
+    for s in np.arange(1,L+1):
+        Ps1=lpmn_arr(1,s,np.cos(theta))
+        Hphis=Hphis + (-1)**(s+1) *comb(l+s,s+1)*np.divide(np.multiply(np.power(R,s-1),Ps1),np.sin(theta))/(sep**(l+s+1))
+    Pl1=lpmn_arr(1,l,np.cos(theta))
+    # Hphi=Hphi + np.multiply((Beta1_1[l-1]*np.divide(Pl1,np.multiply(np.sin(theta),np.power(R,l+2))) + Beta2_1[l-1]*Hphis),np.sin(phi))
+    Hphi_L[:,:,:,l-1]=Hphi
+
+Hth=-Hth
+
+# plot magnetic field
+
+# Formulating the Maxwell Stress Tensor in Spherical Coordinates
+f_L=np.zeros((3,1,L))
+for l in np.arange(1,L+1):
+    f=0
+    for i in range(size_R[0]):
+        if i==0 or i==(size_R[0]-1):
+            p=1
+        elif np.mod(i,2)==0:
+            p=2
+        else:
+            p=4
+        for j in range(size_R[1]):
+            if j==0 or j==size_R[1]-1:
+                q=1
+            elif np.mod(j,2)==0:
+                q=2
+            else:
+                q=4
+            ph=az[i]
+            th=inc[j]
+            # Transformation matrix
+            pre= np.array([[np.sin(th)*np.cos(ph), np.cos(th)*np.cos(ph), -np.sin(ph)],
+                            [np.sin(th)*np.sin(ph), np.cos(th)*np.sin(ph),  np.cos(ph)],
+                            [np.cos(th), -np.sin(th),  0]])
+            post=np.transpose(pre)
+            H0_sph=np.matmul(post,H0)
+            H_sph=np.array([[Hr_L[i,j,2,l-1]],[Hth_L[i,j,2,l-1]],[Hphi_L[i,j,2,l-1]]]) + H0_sph
+            H_cart=np.matmul(pre,H_sph)
+            h=np.linalg.norm(H_cart)
+            T_cart=mu0*(np.matmul(H_cart,np.transpose(H_cart)) - 0.5*(h**2)*np.eye(3))
+            rn_hat=np.array([[np.sin(th)*np.cos(ph)],[np.sin(th)*np.sin(ph)],[np.cos(th)]])
+            f=f+ a*a*np.sin(th)*p*q*np.matmul(T_cart,rn_hat)
+    f=f*dang*dang/9.0
+    f_L[:,:,l-1]=f
+
+print(f)
+
+
+
+# print(np.divide(np.array([1.0,2.0,3.0]),np.array([1.0,3.0])))
+# print(size_R)
+# print(lpmn_arr(0,0,np.array([0.1,0.2,0.3])))
+# print(d_lpmn_arr(0,0,np.array([0.1,0.2,0.3])))
