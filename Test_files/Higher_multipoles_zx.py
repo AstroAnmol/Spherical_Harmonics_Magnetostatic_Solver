@@ -15,11 +15,11 @@ def d_lpmn_arr(m, n, x):
 
 mu0 = 4*np.pi*1e-07
 B0 = mu0 
-susc = 1.0  
+susc = 15.0  
 a = 1.0      
 sep=2.0   
 alpha=0.0 
-L=10   
+L=40   
 debug_f_L=1
 
 mu0 = 4*np.pi*1e-07
@@ -49,7 +49,7 @@ for m in range(2):
             if i==j:
                 X[i,j]=(i+1)*(mu/mu0) + (i+1) + 1
             # Delta and Gamma matrix
-            Delta_m[i,j]= ((-1)**((i+1)+m))*((i+1)*(mu/mu0)-(i+1))*comb(i+1+j+1, j+1-m)*(a**(2*(i+1)+1))/(sep**(i+1+j+1+1))
+            Delta_m[i,j]= ((-1)**((i+1)+m))*((i+1)*(mu/mu0)-(i+1))*comb(i+1+j+1, j+1-m, exact=True)*(a**(2*(i+1)+1))/(sep**(i+1+j+1+1))
             Gamma_m[i,j]= ((-1)**(i+1+j+1))*Delta_m[i,j]
     # 2L X 2L matrix
     Am=np.zeros((2*L,2*L))
@@ -114,9 +114,10 @@ for l in np.arange(1,L+1):
             Psm=lpmn_arr(m,s,np.cos(theta))
             dPsm=d_lpmn_arr(m,s,np.cos(theta))*(-np.sin(theta))
             # R component
-            Hrs=Hrs + ((-1)**(s+m)) * comb(l+s,s+m)*s*np.multiply(np.power(R,s-1),Psm)/ (sep**(l+s+1))
+            additional=((-1)**(s+m))*s*np.multiply(np.power(R,s-1),Psm)/ (sep**(l+s+1))
+            Hrs=Hrs + additional*comb(l+s,s+m, exact=True)
             # Theta component
-            Hths=Hths + ((-1)**(s+m)) * comb(l+s,s+m)*np.multiply(np.power(R,(s-1)),dPsm)/((sep**(l+s+1)))
+            Hths=Hths + ((-1)**(s+m)) * comb(l+s,s+m, exact=True)*np.multiply(np.power(R,(s-1)),dPsm)/((sep**(l+s+1)))
 
         Plm=lpmn_arr(m,l,np.cos(theta))
         dPlm=d_lpmn_arr(m,l,np.cos(theta))*(-np.sin(theta))
@@ -138,7 +139,7 @@ for l in np.arange(1,L+1):
     Hphis=0
     for s in np.arange(1,L+1):
         Ps1=lpmn_arr(1,s,np.cos(theta))
-        Hphis=Hphis + (-1)**(s+1) *comb(l+s,s+1)*np.divide(np.multiply(np.power(R,s-1),Ps1),np.sin(theta))/(sep**(l+s+1))
+        Hphis=Hphis + (-1)**(s+1) *comb(l+s,s+1, exact=True)*np.divide(np.multiply(np.power(R,s-1),Ps1),np.sin(theta))/(sep**(l+s+1))
     Pl1=lpmn_arr(1,l,np.cos(theta))
     # Hphi=Hphi + np.multiply((Beta1_1[l-1]*np.divide(Pl1,np.multiply(np.sin(theta),np.power(R,l+2))) + Beta2_1[l-1]*Hphis),np.sin(phi))
     Hphi_L[:,:,:,l-1]=Hphi
