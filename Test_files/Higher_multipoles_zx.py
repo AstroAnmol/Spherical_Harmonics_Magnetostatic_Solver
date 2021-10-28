@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.special import comb
 from scipy.special import lpmn
-
+import matplotlib.pyplot as plt
 
 @np.vectorize
 def lpmn_arr(m, n, x):
@@ -15,11 +15,12 @@ def d_lpmn_arr(m, n, x):
 
 mu0 = 4*np.pi*1e-07
 B0 = mu0 
-susc = 1  
-a = 1      
-sep=2   
-alpha=0 
+susc = 1.0  
+a = 1.0      
+sep=2.0   
+alpha=0.0 
 L=10   
+debug_f_L=1
 
 mu0 = 4*np.pi*1e-07
 mu = (1+susc)*mu0
@@ -47,9 +48,9 @@ for m in range(2):
             # X Matrix
             if i==j:
                 X[i,j]=(i+1)*(mu/mu0) + (i+1) + 1
-        # Delta and Gamma matrix
-        Delta_m[i,j]= ((-1)**((i+1)+m))*((i+1)*(mu/mu0)-(i+1))*comb(i+1+j+1, j+1-m)*(a^(2*(i+1)+1))/(sep^(i+1+j+1+1))
-        Gamma_m[i,j]= ((-1)**(i+1+j+1))
+            # Delta and Gamma matrix
+            Delta_m[i,j]= ((-1)**((i+1)+m))*((i+1)*(mu/mu0)-(i+1))*comb(i+1+j+1, j+1-m)*(a**(2*(i+1)+1))/(sep**(i+1+j+1+1))
+            Gamma_m[i,j]= ((-1)**(i+1+j+1))*Delta_m[i,j]
     # 2L X 2L matrix
     Am=np.zeros((2*L,2*L))
     Am[0:L,0:L]=X
@@ -82,8 +83,8 @@ for m in range(2):
 
 #Create a 3D spherical mesh
 dang= np.pi/18.0
-inc= np.arange(dang/2, np.pi + dang/2, dang)
-az= np.arange(dang/2, 2*np.pi + dang/2, dang)
+inc= np.arange(dang/2, np.pi + dang, dang)
+az= np.arange(dang/2, 2*np.pi + dang, dang)
 dr= a/100.0
 r1= np.arange(a-dr,a+dr,dr)
 theta, phi, R=np.meshgrid(inc,az,r1)
@@ -111,14 +112,14 @@ for l in np.arange(1,L+1):
         Hths=0
         for s in np.arange(m,L+1):
             Psm=lpmn_arr(m,s,np.cos(theta))
-            dPsm=d_lpmn_arr(m,s,np.cos(theta))
+            dPsm=d_lpmn_arr(m,s,np.cos(theta))*(-np.sin(theta))
             # R component
             Hrs=Hrs + ((-1)**(s+m)) * comb(l+s,s+m)*s*np.multiply(np.power(R,s-1),Psm)/ (sep**(l+s+1))
             # Theta component
             Hths=Hths + ((-1)**(s+m)) * comb(l+s,s+m)*np.multiply(np.power(R,(s-1)),dPsm)/((sep**(l+s+1)))
 
         Plm=lpmn_arr(m,l,np.cos(theta))
-        dPlm=d_lpmn_arr(m,l,np.cos(theta))
+        dPlm=d_lpmn_arr(m,l,np.cos(theta))*(-np.sin(theta))
         if m==0:
             # R Component
             Hr=Hr + np.multiply(((l+1)*Beta1_0[l-1]*np.divide(Plm,np.power(R,(l+2))) -  Beta2_0[l-1]*Hrs),np.cos(m*phi))
@@ -172,7 +173,7 @@ for l in np.arange(1,L+1):
                             [np.cos(th), -np.sin(th),  0]])
             post=np.transpose(pre)
             H0_sph=np.matmul(post,H0)
-            H_sph=np.array([[Hr_L[i,j,2,l-1]],[Hth_L[i,j,2,l-1]],[Hphi_L[i,j,2,l-1]]]) + H0_sph
+            H_sph=np.array([[Hr_L[i,j,1,l-1]],[Hth_L[i,j,1,l-1]],[Hphi_L[i,j,1,l-1]]]) + H0_sph
             H_cart=np.matmul(pre,H_sph)
             h=np.linalg.norm(H_cart)
             T_cart=mu0*(np.matmul(H_cart,np.transpose(H_cart)) - 0.5*(h**2)*np.eye(3))
@@ -180,6 +181,16 @@ for l in np.arange(1,L+1):
             f=f+ a*a*np.sin(th)*p*q*np.matmul(T_cart,rn_hat)
     f=f*dang*dang/9.0
     f_L[:,:,l-1]=f
+
+#plot z component of force vs L
+if debug_f_L==1:
+    plt.figure()
+    plt.plot(np.arange(1,L+1),f_L[2,0,:])
+    plt.title("Z component of force vs L (multipoles)")
+    plt.xlabel('L (multipoles)')
+    plt.ylabel('f_z (N)')
+    plt.grid(True)
+    plt.show()
 
 print(f)
 
