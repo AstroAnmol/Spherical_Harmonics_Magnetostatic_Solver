@@ -15,11 +15,11 @@ def d_lpmn_arr(m, n, x):
 
 mu0 = 4*np.pi*1e-07
 B0 = mu0 
-susc = 15.0  
+susc = 100.0  
 a = 1.0      
 sep=2.0   
 alpha=0.0 
-L=40   
+L=100   
 debug_f_L=1
 
 mu0 = 4*np.pi*1e-07
@@ -82,7 +82,7 @@ for m in range(2):
 ## Computing Magnetic Field
 
 #Create a 3D spherical mesh
-dang= np.pi/18.0
+dang= np.pi/180.0
 inc= np.arange(dang/2, np.pi + dang, dang)
 az= np.arange(dang/2, 2*np.pi + dang, dang)
 dr= a/100.0

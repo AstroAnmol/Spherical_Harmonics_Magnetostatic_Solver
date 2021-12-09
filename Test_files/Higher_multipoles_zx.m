@@ -4,9 +4,10 @@ clear all;
 mu0 = 4*pi*1e-07;
 B0 = mu0;       %4*pi*1e-07;
 susc = 1;       % Magnetic susceptibility
+%% 
 a = 1;          % Grain radius, meters
 sep=2;          % Separation between the grains in terms of radius 
-alpha=90;        % Magnetic Field Direction
+alpha=0;        % Magnetic Field Direction
 L=10;           % Number of multipoles used
 debug_mag=0;    % If 1 plots magnetic field magnitude for each L
 debug_f_L=1;    % If 1 plots z component of force with L
@@ -126,7 +127,7 @@ end
 %% Computing the Magnetic Field
 
 %Create a 3D spherical mesh
-dang = pi/18;
+dang = pi/180;
 inc = dang/2:dang:pi+dang/2;
 az = dang/2:dang:2*pi+dang/2;
 dr=a/100;
