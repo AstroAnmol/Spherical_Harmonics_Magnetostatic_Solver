@@ -5,7 +5,7 @@ import pandas as pd
 ## Inputs
 mu0 = 4*np.pi*1e-07
 B0 = mu0
-susc = 1.0 # Magnetic susceptibility
+susc = 75.0 # Magnetic susceptibility
 a = 1.0 # Grain radius, meters
 sep=2.0    
 alpha=0.0
@@ -18,7 +18,6 @@ debug_mag=1
 fmag=np.zeros(12)
 
 sep=np.arange(2.0, 4.3, 0.2)
-susc=75
 check=range(12)
 
 for i in range(12):
