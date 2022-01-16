@@ -15,11 +15,11 @@ def d_lpmn_arr(m, n, x):
 
 mu0 = 4*np.pi*1e-07
 B0 = mu0 
-susc = 100.0  
+susc = 1.0  
 a = 1.0      
 sep=2.0   
-alpha=0.0 
-L=100   
+alpha=90.0 
+L=10   
 debug_f_L=1
 
 mu0 = 4*np.pi*1e-07
@@ -107,7 +107,7 @@ Hth=0
 Hphi=0
 
 for l in np.arange(1,L+1):
-    for m in range(1):
+    for m in range(2):
         Hrs=0
         Hths=0
         for s in np.arange(m,L+1):

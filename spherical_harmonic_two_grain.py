@@ -96,7 +96,7 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
     Hphi=0
 
     for l in np.arange(1,L+1):
-        for m in range(1):
+        for m in range(2):
             Hrs=0
             Hths=0
             for s in np.arange(m,L+1):

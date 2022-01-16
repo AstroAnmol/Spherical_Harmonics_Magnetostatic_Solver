@@ -5,11 +5,11 @@ import pandas as pd
 ## Inputs
 mu0 = 4*np.pi*1e-07
 B0 = mu0
-susc = 75.0 # Magnetic susceptibility
+susc = 20.0 # Magnetic susceptibility
 a = 1.0 # Grain radius, meters
 sep=2.0    
-alpha=0.0
-L=80 # Number of multipoles used
+alpha=90.0
+L=45 # Number of multipoles used
 debug_mag=1
 
 # f=spherical_harmonic_two_grain(B0,susc, a, sep, alpha, L)
@@ -28,4 +28,4 @@ for i in range(12):
 
 data_d={'Force':fmag, 'Separation':sep}
 data=pd.DataFrame(data=data_d)
-data.to_csv('fmag_susc_75_th_0_L_80.csv')
+data.to_csv('fmag_susc_20_th_90_L_45.csv')
