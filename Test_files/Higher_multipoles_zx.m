@@ -7,7 +7,7 @@ susc = 1;       % Magnetic susceptibility
 %% 
 a = 1;          % Grain radius, meters
 sep=2;          % Separation between the grains in terms of radius 
-alpha=0;        % Magnetic Field Direction
+alpha=90;        % Magnetic Field Direction
 L=10;           % Number of multipoles used
 debug_mag=0;    % If 1 plots magnetic field magnitude for each L
 debug_f_L=1;    % If 1 plots z component of force with L
