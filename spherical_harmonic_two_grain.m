@@ -68,7 +68,7 @@ dang = pi/180;
 inc = dang/2:dang:pi+dang/2;
 az = dang/2:dang:2*pi+dang/2;
 dr=a/100;
-r1=a-dr:dr:a+dr;
+r1=a-dr:dr:a+20*dr;
 [theta,phi,R] = meshgrid(inc,az,r1);
 
 
@@ -171,11 +171,11 @@ end
 figure;
 Ang=1;
 pc=pcolor(squeeze(z(Ang,:,:))./a,squeeze(x(Ang,:,:))./a,squeeze(H_tot_mag(Ang,:,:))); set(pc, 'EdgeColor', 'none');
-colormap('hot');
+% colormap('hot');
 xlim([-2 2]); ylim([-1.5 1.5]);
 title('|H|');
-xlabel('x');
-ylabel('y');
+xlabel('z');
+ylabel('x');
 colorbar;
 axis equal;
 grid on;

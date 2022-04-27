@@ -1,7 +1,8 @@
 import numpy as np
 from scipy.special import comb
 from scipy.special import lpmn
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+import matplotlib.axis as ax
 
 @np.vectorize
 def lpmn_arr(m, n, x):
@@ -15,6 +16,7 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
     mu = (a+susc)*mu0
     H0mag = B0/mu0 #Applied magnetic field, A/m
     sep = sep*a
+    debug_mag=1
 
     R1=np.array([[0], [0], [sep]])
     R2=np.array([[0], [0], [0]])
@@ -75,13 +77,13 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
     inc= np.arange(dang/2, np.pi + dang, dang)
     az= np.arange(dang/2, 2*np.pi + dang, dang)
     dr= a/100.0
-    r1= np.arange(a-dr,a+dr,dr)
+    r1= np.arange(a-dr,a+50*dr,dr)
     theta, phi, R=np.meshgrid(inc,az,r1)
-
+    print(r1)
     #Convert the spherical mesh to cartesian
-    x= np.multiply(R,np.multiply(np.cos(phi),np.sin(theta)))
-    y= np.multiply(R,np.multiply(np.sin(phi),np.sin(theta)))
-    z= np.multiply(R,np.cos(theta))
+    # x= np.multiply(R,np.multiply(np.cos(phi),np.sin(theta)))
+    # y= np.multiply(R,np.multiply(np.sin(phi),np.sin(theta)))
+    # z= np.multiply(R,np.cos(theta))
 
     #define size parameters
     size_R=np.shape(R) #size of all elements in 3D space
@@ -135,6 +137,43 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
 
     Hth=-Hth
 
+    # plot Magnetic Field
+    # Hmat = sqrt(Hr.^2+Hth.^2+Hphi.^2);
+    
+    if debug_mag==1:
+        x=R*np.cos(phi)*np.sin(theta)
+        y=R*np.sin(phi)*np.sin(theta)
+        z=R*np.cos(theta)
+
+        H_tot_mag=np.zeros(size_R)
+        for i in range(size_R[0]):
+            for j in range(size_R[1]):
+                for k in range(size_R[2]):
+                    ph=az[i]
+                    th=inc[j]
+                    #Transformation matrix
+                    pre= np.array([[np.sin(th)*np.cos(ph), np.cos(th)*np.cos(ph), -np.sin(ph)],
+                                [np.sin(th)*np.sin(ph), np.cos(th)*np.sin(ph),  np.cos(ph)],
+                                [np.cos(th), -np.sin(th),  0]])
+                    post=np.transpose(pre)
+                    H0_sph=np.matmul(post,H0)
+                    H_sph=np.array([[Hr_L[i,j,k,l-1]],[Hth_L[i,j,k,l-1]],[Hphi_L[i,j,k,l-1]]]) + H0_sph
+                    H_tot_mag[i,j,k]=np.linalg.norm(H_sph)
+        plt.figure()
+        Ang=0
+        pc=plt.pcolor(np.squeeze(z[Ang,:,:])/a,np.squeeze(x[Ang,:,:])/a,np.squeeze(H_tot_mag[Ang,:,:]))
+        # plt.colormap('hot')
+        plt.xlim((-2, 2))
+        plt.ylim((-1.5, 1.5))
+        plt.title('|H|')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.colorbar()
+        plt.axis('equal')
+        plt.grid(True)
+        plt.show()
+
+
     # Formulating the Maxwell Stress Tensor in Spherical Coordinates
     f_L=np.zeros((3,1,L))
     for l in np.arange(1,L+1):
@@ -168,8 +207,8 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
                 rn_hat=np.array([[np.sin(th)*np.cos(ph)],[np.sin(th)*np.sin(ph)],[np.cos(th)]])
                 f=f+ a*a*np.sin(th)*p*q*np.matmul(T_cart,rn_hat)
         f=f*dang*dang/9.0
-        f_L[:,:,l-1]=f  
-    return(f)
+        f_L[:,:,l-1]=f
+    return(Hr_L, Hth_L, Hphi_L, f_L)
 # #plot z component of force vs L
 # if debug_f_L==1:
 #     plt.figure()

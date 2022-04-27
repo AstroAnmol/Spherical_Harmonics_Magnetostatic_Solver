@@ -3,11 +3,11 @@ clear all;
 %% Inputs
 mu0 = 4*pi*1e-07;
 B0 = mu0;%6e-4;
-susc = 1;%0.96; % Magnetic susceptibility
+susc = 30;%0.96; % Magnetic susceptibility
 a = 1;%1.4e-6;  % Grain radius, meters
-sep=2;    
+sep=4;    
 alpha=0;
-L=10;       % Number of multipoles used
+L=50;       % Number of multipoles used
 debug_mag=1;
 %%
 
