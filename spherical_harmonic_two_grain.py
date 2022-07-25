@@ -13,10 +13,10 @@ def d_lpmn_arr(m, n, x):
 
 def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
     mu0= 4*np.pi*1e-07
-    mu = (a+susc)*mu0
+    mu = (1+susc)*mu0
     H0mag = B0/mu0 #Applied magnetic field, A/m
     sep = sep*a
-    debug_mag=1
+    debug_mag=0
 
     R1=np.array([[0], [0], [sep]])
     R2=np.array([[0], [0], [0]])
@@ -77,9 +77,8 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
     inc= np.arange(dang/2, np.pi + dang, dang)
     az= np.arange(dang/2, 2*np.pi + dang, dang)
     dr= a/100.0
-    r1= np.arange(a-dr,a+50*dr,dr)
+    r1= np.arange(a-dr,a+dr,dr)
     theta, phi, R=np.meshgrid(inc,az,r1)
-    print(r1)
     #Convert the spherical mesh to cartesian
     # x= np.multiply(R,np.multiply(np.cos(phi),np.sin(theta)))
     # y= np.multiply(R,np.multiply(np.sin(phi),np.sin(theta)))
@@ -132,7 +131,7 @@ def spherical_harmonic_two_grain(B0, susc, a, sep, alpha, L):
             Ps1=lpmn_arr(1,s,np.cos(theta))
             Hphis=Hphis + (-1)**(s+1) *comb(l+s,s+1, exact=True)*np.divide(np.multiply(np.power(R,s-1),Ps1),np.sin(theta))/(sep**(l+s+1))
         Pl1=lpmn_arr(1,l,np.cos(theta))
-        # Hphi=Hphi + np.multiply((Beta1_1[l-1]*np.divide(Pl1,np.multiply(np.sin(theta),np.power(R,l+2))) + Beta2_1[l-1]*Hphis),np.sin(phi))
+        Hphi=Hphi + np.multiply((Beta1_1[l-1]*np.divide(Pl1,np.multiply(np.sin(theta),np.power(R,l+2))) + Beta2_1[l-1]*Hphis),np.sin(phi))
         Hphi_L[:,:,:,l-1]=Hphi
 
     Hth=-Hth
