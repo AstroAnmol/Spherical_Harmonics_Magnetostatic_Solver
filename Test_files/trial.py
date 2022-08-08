@@ -18,11 +18,11 @@ start_time = time.time()
 ## Inputs
 mu0 = 4*np.pi*1e-07
 B0 = mu0
-susc = 1.0 # Magnetic susceptibility
+susc = 100.0 # Magnetic susceptibility
 a = 1.0 # Grain radius, meters
 sep=2    
 alpha=0.0
-L=10 # Number of multipoles used
+L=80 # Number of multipoles used
 debug_mag=0
 mu = (1+susc)*mu0
 H0mag = B0/mu0 #Applied magnetic field, A/m
@@ -155,7 +155,7 @@ def integrand(th, ph):
 
 
 #Create a 3D spherical mesh
-dang= np.pi/36.0
+dang= np.pi/360
 inc= np.arange(dang/2, np.pi + dang, dang)
 az= np.arange(dang/2, 2*np.pi + dang, dang)
 

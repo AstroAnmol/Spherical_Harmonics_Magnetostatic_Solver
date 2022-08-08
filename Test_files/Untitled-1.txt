@@ -35,3 +35,27 @@ dusty-sikka@NerdSpace:~/Research/Code/Spherical_Harmonics_Magnetostatic_Solver$ 
  [-5.14338963e-20]
  [-6.65596596e-04]]
 dusty-sikka@NerdSpace:~/Research/Code/Spherical_Harmonics_Magnetostatic_Solver$ 
+
+Linear system solved
+--- 48.826950550079346 seconds ---
+[[-1.47089659e-22]
+ [-2.32637308e-23]
+ [-5.48690209e-07]]
+anmol@sikka-dusty:~/Research/Code/Spherical_Harmonics_Magnetostatic_Solver$ /bin/python3 /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Test_files/trial.py
+Linear system solved
+--- 3171.1322515010834 seconds ---
+[[ 2.39626961e-21]
+ [-9.68197966e-21]
+ [-4.13058849e-04]]
+anmol@sikka-dusty:~/Research/Code/Spherical_Harmonics_Magnetostatic_Solver$ /bin/python3 /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Test_files/trial.py
+Linear system solved
+--- 12604.454796791077 seconds ---
+[[ 5.54435505e-21]
+ [-7.44048968e-20]
+ [-7.05748309e-04]]
+anmol@sikka-dusty:~/Research/Code/Spherical_Harmonics_Magnetostatic_Solver$ /bin/python3 /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Test_files/trial.py
+Linear system solved
+--- 187458.55233573914 seconds ---
+[[-6.50868700e-21]
+ [ 4.01984205e-20]
+ [-6.91427755e-04]]
