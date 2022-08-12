@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver'
+make: Leaving directory '/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

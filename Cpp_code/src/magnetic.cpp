@@ -18,15 +18,12 @@ magnetic::magnetic(double arr[]){
     double H_perp=hmag*std::sin(alpha);
     double H_prll=hmag*std::cos(alpha);
 
-    Eigen::VectorXd Beta1_0(L), Beta2_0(L), Beta1_1(L), Beta2_1(L)
+    Eigen::VectorXd Beta1_0(L), Beta2_0(L), Beta1_1(L), Beta2_1(L) ;
 
-    for (int m= 0; m < 2; m++)
-    {
+    for (int m= 0; m < 2; m++){
         Eigen::MatrixXd X(L,L), Delta_m(L,L), Gamma_m(L,L); 
-        for (int i = 0; i < L; i++)
-        {
-            for (int j = 0; j < L; j++)
-            {
+        for (int i = 0; i < L; i++){
+            for (int j = 0; j < L; j++){
                 // X matrix
                 if (i==j)
                 {
@@ -35,8 +32,7 @@ magnetic::magnetic(double arr[]){
                 // Delta and Gamma matrix
                 Delta_m(i,j)=std::pow((-1),((i+1)+m))*((i+1)*(mu/mu0)-(i+1))*nchoosek(i+1+j+1, j+1-m)*std::pow(a,(2*(i+1)+1))/std::pow(sep,(i+1+j+1+1));
                 Gamma_m(i,j)=std::pow((-1), (i+1+j+1))*Delta_m(i,j);
-            }
-            
+            }   
         }
         // 2L X 2L Matrix
         Eigen::MatrixXd Am(2*L, 2*L);
@@ -54,13 +50,15 @@ magnetic::magnetic(double arr[]){
             qm(0)=H_perp*std::pow(a,3)*(1-mu/mu0);
         }
         
-        # 2L Q vector
+        //2L Q vector
         Eigen::VectorXd Qm(2*L);
         Qm.block(0,0,L,1)=qm;
         Qm.block(L,0,L,1)=qm;
 
         //solve linear system
-        Beta_m=A.PartialPivLU().solve(Qm);
+        Eigen::VectorXd Beta_m(2*L);
+
+        Beta_m=Am.ColPivHouseholderQR().solve(Qm);
         if (m==0){
             Beta1_0=Beta_m.block(0,0,L,1);
             Beta2_0=Beta_m.block(L,0,L,1);
@@ -69,7 +67,7 @@ magnetic::magnetic(double arr[]){
             Beta1_1=Beta_m.block(0,0,L,1);
             Beta2_1=Beta_m.block(L,0,L,1);
         }
-    }
+    };
     std::cout<< "Linear System Solved"<<std::endl;
     
 }
@@ -86,4 +84,25 @@ double magnetic::nchoosek(int n, int k){
         result /= i;
     }
     return result;
+}
+
+double magnetic::mag_field(double r, double theta, double phi){
+    double Hr, Hth, Hphi;
+    for (int l = 0; l < L+1; l++){
+        for (int m = 0; m < 2; m++){
+            double Hrs, Hths, Hphis;
+            for (int s = m; s < L+1; s++){
+                double Psm=std::assoc_legendre(s, m, std::cos(theta));
+                double dPsm=
+            }
+            
+        }
+        
+    }
+    
+}
+
+//define associate legendre functions for cos(theta)
+double magnetic::d_lpmn(int n, int m, double x){
+    return ((m-n-1).*Ps1m + (n+1).*x.*Psm)
 }
