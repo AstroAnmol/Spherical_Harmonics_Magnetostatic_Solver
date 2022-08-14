@@ -18,11 +18,11 @@ start_time = time.time()
 ## Inputs
 mu0 = 4*np.pi*1e-07
 B0 = mu0
-susc = 100.0 # Magnetic susceptibility
+susc = 1.0 # Magnetic susceptibility
 a = 1.0 # Grain radius, meters
 sep=2    
 alpha=0.0
-L=80 # Number of multipoles used
+L=10 # Number of multipoles used
 debug_mag=0
 mu = (1+susc)*mu0
 H0mag = B0/mu0 #Applied magnetic field, A/m
@@ -153,38 +153,39 @@ def integrand(th, ph):
 
 # force=dblquad(f_x, 0, np.pi, lambda ph: 0, lambda ph: 2*np.pi)
 
-
+print(lpmn_arr(0,1, np.cos(np.pi/4)))
+print(d_lpmn_arr(0,1, np.cos(np.pi/4))*(-np.sin(np.pi/4)))
 #Create a 3D spherical mesh
-dang= np.pi/360
-inc= np.arange(dang/2, np.pi + dang, dang)
-az= np.arange(dang/2, 2*np.pi + dang, dang)
+# dang= np.pi/180
+# inc= np.arange(dang/2, np.pi + dang, dang)
+# az= np.arange(dang/2, 2*np.pi + dang, dang)
 
-size_az=np.shape(az)[0]
-size_inc=np.shape(inc)[0] #size of all elements in 3D space
+# size_az=np.shape(az)[0]
+# size_inc=np.shape(inc)[0] #size of all elements in 3D space
 
-# Formulating the Maxwell Stress Tensor in Spherical Coordinates
-f=0
-for i in range(size_az):
-    if i==0 or i==(size_az-1):
-        p=1
-    elif np.mod(i,2)==0:
-        p=2
-    else:
-        p=4
-    for j in range(size_inc):
-        if j==0 or j==size_inc-1:
-            q=1
-        elif np.mod(j,2)==0:
-            q=2
-        else:
-            q=4
-        ph=az[i]
-        th=inc[j]
-        # Transformation matrix
-        f=f+ a*p*q*integrand(th, ph)
-f=f*dang*dang/9.0
+# # Formulating the Maxwell Stress Tensor in Spherical Coordinates
+# f=0
+# for i in range(size_az):
+#     if i==0 or i==(size_az-1):
+#         p=1
+#     elif np.mod(i,2)==0:
+#         p=2
+#     else:
+#         p=4
+#     for j in range(size_inc):
+#         if j==0 or j==size_inc-1:
+#             q=1
+#         elif np.mod(j,2)==0:
+#             q=2
+#         else:
+#             q=4
+#         ph=az[i]
+#         th=inc[j]
+#         # Transformation matrix
+#         f=f+ a*p*q*integrand(th, ph)
+# f=f*dang*dang/9.0
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
-print(f)
+# print(f)

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 12 15:19:37 2022
+# Make data base, printed on Sat Aug 13 13:46:46 2022
 
 # Variables
 
@@ -39,7 +39,7 @@ XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
 GDMSESSION = ubuntu
 # environment
-XMODIFIERS = @im
+XMODIFIERS = @im=ibus
 # makefile
 CURDIR := /home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver
 # makefile
@@ -49,7 +49,7 @@ SNAP_DATA = /var/snap/code/104
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:50742
+JOURNAL_STREAM = 8:48630
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -69,11 +69,11 @@ MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-_ = /usr/bin/printenv
+_ = /snap/code/104/usr/share/code/code
 # environment
-MANAGERPID = 1601
+MANAGERPID = 1697
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -87,7 +87,7 @@ PATH = /home/aerospacenerd/.local/bin:/home/aerospacenerd/.local/bin:/usr/local/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/nerdspace-hp:@/tmp/.ICE-unix/1834,unix/nerdspace-hp:/tmp/.ICE-unix/1834
+SESSION_MANAGER = local/nerdspace-hp:@/tmp/.ICE-unix/1922,unix/nerdspace-hp:/tmp/.ICE-unix/1922
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -103,19 +103,19 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 4473dc2c59464a14b458ef518ff9812b
+INVOCATION_ID = 009a7e5e10be42a49bf40ecd9e2b0b0c
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/104/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
-LS_COLORS = rs
+LS_COLORS = 
 # environment
 XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 63476
+GIO_LAUNCHED_DESKTOP_FILE_PID = 4328
 # automatic
 %F = $(notdir $%)
 # environment
@@ -127,7 +127,7 @@ PWD = /home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1791
+SSH_AGENT_PID = 1884
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -164,8 +164,6 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 MAKELEVEL := 0
 # environment
 SNAP_REAL_HOME = /home/aerospacenerd
-# environment
-COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -175,7 +173,7 @@ QT_IM_MODULE = ibus
 # environment
 SNAP_USER_DATA = /home/aerospacenerd/snap/code/104
 # environment
-SHLVL = 1
+SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # default
@@ -192,8 +190,6 @@ XDG_CURRENT_DESKTOP = Unity
 %D = $(patsubst %/,%,$(dir $%))
 # default
 MAKE_COMMAND := make
-# environment
-TERM_PROGRAM = vscode
 # default
 .VARIABLES := 
 # automatic
@@ -208,8 +204,6 @@ MAKEFLAGS = pqrR
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# environment
-TERM_PROGRAM_VERSION = 1.70.1
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -251,11 +245,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-TERM = xterm-256color
-# environment
-VSCODE_PID = 64423
+VSCODE_PID = 4473
 # variable set hash-table stats:
-# Load=121/1024=12%, Rehash=0, Collisions=17/143=12%
+# Load=117/1024=11%, Rehash=0, Collisions=17/139=12%
 
 # Pattern-specific Variable Values
 
@@ -282,7 +274,6 @@ all:
 
 # Not a target:
 Makefile:
- 
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
@@ -291,6 +282,7 @@ Makefile:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
+ 
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
@@ -322,6 +314,6 @@ GNUmakefile:
 # strcache performance: lookups = 26 / hit rate = 11%
 # hash-table stats:
 # Load=23/8192=0%, Rehash=0, Collisions=1/26=4%
-# Finished Make data base on Fri Aug 12 15:19:37 2022
+# Finished Make data base on Sat Aug 13 13:46:46 2022
 
  

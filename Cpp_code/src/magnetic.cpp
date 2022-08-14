@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cmath>
 #include "magnetic.h"
-#include <Eigen/Dense>
-
+#include <eigen-3.4.0/Eigen/Dense>
+#define __STDCPP_WANT_MATH_SPEC_FUNCS__
 // Intiator
-magnetic::magnetic(double arr[]){
+magnetic::magnetic(Eigen::VectorXd arr){
     // variable assignment
     a=arr[0];
     sep=arr[1]*a;
@@ -18,7 +18,7 @@ magnetic::magnetic(double arr[]){
     double H_perp=hmag*std::sin(alpha);
     double H_prll=hmag*std::cos(alpha);
 
-    Eigen::VectorXd Beta1_0(L), Beta2_0(L), Beta1_1(L), Beta2_1(L) ;
+    H0<< H_perp, 0, H_prll;
 
     for (int m= 0; m < 2; m++){
         Eigen::MatrixXd X(L,L), Delta_m(L,L), Gamma_m(L,L); 
@@ -58,7 +58,7 @@ magnetic::magnetic(double arr[]){
         //solve linear system
         Eigen::VectorXd Beta_m(2*L);
 
-        Beta_m=Am.ColPivHouseholderQR().solve(Qm);
+        Beta_m=Am.colPivHouseholderQr().solve(Qm);
         if (m==0){
             Beta1_0=Beta_m.block(0,0,L,1);
             Beta2_0=Beta_m.block(L,0,L,1);
@@ -70,6 +70,37 @@ magnetic::magnetic(double arr[]){
     };
     std::cout<< "Linear System Solved"<<std::endl;
     
+    //Create a 3D spherical mesh
+    int N =180;
+    double dang= M_PI/N;
+    Eigen::VectorXd inc= Eigen::VectorXd::LinSpaced(N,dang/2, M_PI + dang).transpose();
+    Eigen::VectorXd az= Eigen::VectorXd::LinSpaced(2*N,dang/2, 2*M_PI + dang).transpose();
+
+    f=Eigen::Vector3d::Zero();
+
+    // std::cout<<"for loop started"<<std::endl;
+    // Formulating the Maxwell Stress Tensor in Spherical Coordinates
+    for (int i = 0; i < 2*N; i++){
+        double p;
+        if (i==0 or i==(2*N-1)){
+            p=1;}
+        else if (i%2==0){
+            p=2;}
+        else{ p=4;}
+        for (int j = 0; j < N; j++){
+            double q;
+            if (j==0 or j==(N-1)){
+                q=1;}
+            else if (j%2==0){
+                q=2;}
+            else{ q=4;}
+            double ph= az[i];
+            double th= inc[j];
+            f=f+ a*p*q*integrand(th, ph);
+        }
+    }
+    f=f*dang*dang/9.0;
+
 }
 
 
@@ -86,23 +117,80 @@ double magnetic::nchoosek(int n, int k){
     return result;
 }
 
-double magnetic::mag_field(double r, double theta, double phi){
-    double Hr, Hth, Hphi;
-    for (int l = 0; l < L+1; l++){
+Eigen::Vector3d magnetic::mag_field(double r, double theta, double phi){
+    double Hr=0, Hth=0, Hphi=0;
+    for (int l = 1; l < L+1; l++){
         for (int m = 0; m < 2; m++){
-            double Hrs, Hths, Hphis;
+            double Hrs=0, Hths=0, Hphis=0;
             for (int s = m; s < L+1; s++){
-                double Psm=std::assoc_legendre(s, m, std::cos(theta));
-                double dPsm=
+                double Psm=lpmn_cos(m, s, theta);
+                double dPsm=d_lpmn_cos(m, s, theta);
+                double ls_choose_sm=nchoosek(l+s, s+m);
+                double r_pow_s1=std::pow(r, (s-1));
+                double sep_pow=std::pow(sep, l+s+1);
+                double minus_one_pow=std::pow(-1, s+m);
+                double r_pow_times_Psm=r_pow_s1*Psm;
+
+                // r component
+                double additional=(minus_one_pow)*s*r_pow_times_Psm/(sep_pow);
+                double Hrs=Hrs + additional*(ls_choose_sm);
+                // theta component
+                double Hths=Hths + (minus_one_pow)*ls_choose_sm*(r_pow_s1*dPsm)/(sep_pow);
+                // phi component
+                if (m==1){
+                    Hphis= Hphis + (minus_one_pow)*ls_choose_sm*r_pow_times_Psm/(std::sin(theta))/(sep_pow);
+                }
+
+                double Plm=lpmn_cos(m, l, theta);
+                double dPlm=d_lpmn_cos(m, l, theta);
+                double r_pow_l2=std::pow(r, l+2);
+
+                if (m==0){
+                    // R component
+                    Hr=Hr + (((l+1)*Beta1_0[l-1]*(Plm/r_pow_l2) -  Beta2_0[l-1]*Hrs)*std::cos(m*phi));
+                    // Theta component
+                    Hth=Hth + ((Beta1_0[l-1]*(dPlm/r_pow_l2) + Beta2_0[l-1]*Hths)*std::cos(m*phi));
+                }
+                else if (m==1){
+                    // R Component
+                    Hr=Hr + (((l+1)*Beta1_1[l-1]*(Plm/r_pow_l2) - Beta2_1[l-1]*Hrs)*std::cos(m*phi));
+                    // Theta component
+                    Hth=Hth + ((Beta1_1[l-1]*(dPlm/r_pow_l2) + Beta2_1[l-1]*Hths)*std::cos(m*phi));
+                    // Phi component
+                    Hphi=Hphi + ((Beta1_1[l-1]*(Plm/(std::sin(theta)/r_pow_l2)) + Beta2_1[l-1]*Hphis)*std::sin(phi));
+                }
             }
-            
         }
-        
     }
-    
+    Hth=-Hth;
+    Eigen::Vector3d magfield;
+    magfield << Hr, Hth, Hphi;
+    return magfield;
+}
+
+//integrand function
+Eigen::Vector3d magnetic::integrand(double th, double ph){
+    //transformation matrix
+    Eigen::Matrix3d pre, post, T_cart;
+    pre<<   std::sin(th)*std::cos(ph), std::cos(th)*std::cos(ph), -std::sin(ph),
+            std::sin(th)*std::sin(ph), std::cos(th)*std::sin(ph),  std::cos(ph),
+            std::cos(th), -std::sin(th),  0;
+    post= pre.transpose();
+    Eigen::Vector3d H0_sph, H_sph, H_cart, rn_hat;
+    H0_sph=post*H0;
+    H_sph= mag_field(a, th, ph) + H0_sph;
+    H_cart=pre*H_sph;
+    double h=H_cart.norm();
+    T_cart=mu0*(H_cart*H_cart.transpose() - 0.5*(h*h)*Eigen::Matrix3d::Identity());
+    rn_hat<<std::sin(th)*std::cos(ph),std::sin(th)*std::sin(ph),std::cos(th);
+    return std::sin(th)*T_cart*rn_hat;
 }
 
 //define associate legendre functions for cos(theta)
-double magnetic::d_lpmn(int n, int m, double x){
-    return ((m-n-1).*Ps1m + (n+1).*x.*Psm)
+double magnetic::lpmn_cos(int m, int n, double theta){
+    return std::assoc_legendre(n, m, std::cos(theta));
+}
+
+double magnetic::d_lpmn_cos(int m, int n, double theta){
+    return ((m-n-1)*lpmn_cos(m,n+1,theta) + (n+1)*std::cos(theta)*lpmn_cos(m,n,theta))/(-std::sin(theta));
 }
