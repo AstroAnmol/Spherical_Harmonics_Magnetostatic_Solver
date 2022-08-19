@@ -70,7 +70,7 @@ magnetic::magnetic(Eigen::VectorXd arr){
     };
     std::cout<< "Linear System Solved"<<std::endl;
     
-    //Create a 3D spherical mesh
+    // Create a 3D spherical mesh
     int N =180;
     double dang= M_PI/N;
     Eigen::VectorXd inc= Eigen::VectorXd::LinSpaced(N,dang/2, M_PI + dang).transpose();
@@ -78,7 +78,6 @@ magnetic::magnetic(Eigen::VectorXd arr){
 
     f=Eigen::Vector3d::Zero();
 
-    // std::cout<<"for loop started"<<std::endl;
     // Formulating the Maxwell Stress Tensor in Spherical Coordinates
     for (int i = 0; i < 2*N; i++){
         double p;
@@ -140,25 +139,24 @@ Eigen::Vector3d magnetic::mag_field(double r, double theta, double phi){
                 if (m==1){
                     Hphis= Hphis + (minus_one_pow)*ls_choose_sm*r_pow_times_Psm/(std::sin(theta))/(sep_pow);
                 }
-
-                double Plm=lpmn_cos(m, l, theta);
-                double dPlm=d_lpmn_cos(m, l, theta);
-                double r_pow_l2=std::pow(r, l+2);
-
-                if (m==0){
-                    // R component
-                    Hr=Hr + (((l+1)*Beta1_0[l-1]*(Plm/r_pow_l2) -  Beta2_0[l-1]*Hrs)*std::cos(m*phi));
-                    // Theta component
-                    Hth=Hth + ((Beta1_0[l-1]*(dPlm/r_pow_l2) + Beta2_0[l-1]*Hths)*std::cos(m*phi));
-                }
-                else if (m==1){
-                    // R Component
-                    Hr=Hr + (((l+1)*Beta1_1[l-1]*(Plm/r_pow_l2) - Beta2_1[l-1]*Hrs)*std::cos(m*phi));
-                    // Theta component
-                    Hth=Hth + ((Beta1_1[l-1]*(dPlm/r_pow_l2) + Beta2_1[l-1]*Hths)*std::cos(m*phi));
-                    // Phi component
-                    Hphi=Hphi + ((Beta1_1[l-1]*(Plm/(std::sin(theta)/r_pow_l2)) + Beta2_1[l-1]*Hphis)*std::sin(phi));
-                }
+            }
+            double Plm=lpmn_cos(m, l, theta);
+            double dPlm=d_lpmn_cos(m, l, theta);
+            double r_pow_l2=std::pow(r, l+2);
+            // std::cout<<"Hrs"<<Hrs<<"Hths"<<Hths<<std::endl;
+            if (m==0){
+                // R component
+                Hr=Hr + (((l+1)*Beta1_0[l-1]*(Plm/r_pow_l2) -  Beta2_0[l-1]*Hrs)*std::cos(m*phi));
+                // Theta component
+                Hth=Hth + ((Beta1_0[l-1]*(dPlm/r_pow_l2) + Beta2_0[l-1]*Hths)*std::cos(m*phi));
+            }
+            else if (m==1){
+                // R Component
+                Hr=Hr + (((l+1)*Beta1_1[l-1]*(Plm/r_pow_l2) - Beta2_1[l-1]*Hrs)*std::cos(m*phi));
+                // Theta component
+                Hth=Hth + ((Beta1_1[l-1]*(dPlm/r_pow_l2) + Beta2_1[l-1]*Hths)*std::cos(m*phi));
+                // Phi component
+                Hphi=Hphi + ((Beta1_1[l-1]*(Plm/(std::sin(theta)/r_pow_l2)) + Beta2_1[l-1]*Hphis)*std::sin(phi));
             }
         }
     }
@@ -188,7 +186,7 @@ Eigen::Vector3d magnetic::integrand(double th, double ph){
 
 //define associate legendre functions for cos(theta)
 double magnetic::lpmn_cos(int m, int n, double theta){
-    return std::assoc_legendre(n, m, std::cos(theta));
+    return std::pow(-1,m)*std::assoc_legendre(n, m, std::cos(theta));
 }
 
 double magnetic::d_lpmn_cos(int m, int n, double theta){

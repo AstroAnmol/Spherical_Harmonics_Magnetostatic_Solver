@@ -153,39 +153,52 @@ def integrand(th, ph):
 
 # force=dblquad(f_x, 0, np.pi, lambda ph: 0, lambda ph: 2*np.pi)
 
-print(lpmn_arr(0,1, np.cos(np.pi/4)))
-print(d_lpmn_arr(0,1, np.cos(np.pi/4))*(-np.sin(np.pi/4)))
+
 #Create a 3D spherical mesh
-# dang= np.pi/180
-# inc= np.arange(dang/2, np.pi + dang, dang)
-# az= np.arange(dang/2, 2*np.pi + dang, dang)
+dang= np.pi/180
+inc= np.arange(dang/2, np.pi + dang, dang)
+az= np.arange(dang/2, 2*np.pi + dang, dang)
 
-# size_az=np.shape(az)[0]
-# size_inc=np.shape(inc)[0] #size of all elements in 3D space
+size_az=np.shape(az)[0]
+size_inc=np.shape(inc)[0] #size of all elements in 3D space
 
-# # Formulating the Maxwell Stress Tensor in Spherical Coordinates
-# f=0
-# for i in range(size_az):
-#     if i==0 or i==(size_az-1):
-#         p=1
-#     elif np.mod(i,2)==0:
-#         p=2
-#     else:
-#         p=4
-#     for j in range(size_inc):
-#         if j==0 or j==size_inc-1:
-#             q=1
-#         elif np.mod(j,2)==0:
-#             q=2
-#         else:
-#             q=4
-#         ph=az[i]
-#         th=inc[j]
-#         # Transformation matrix
-#         f=f+ a*p*q*integrand(th, ph)
-# f=f*dang*dang/9.0
+# Formulating the Maxwell Stress Tensor in Spherical Coordinates
+f=0
+for i in range(size_az):
+    if i==0 or i==(size_az-1):
+        p=1
+    elif np.mod(i,2)==0:
+        p=2
+    else:
+        p=4
+    for j in range(size_inc):
+        if j==0 or j==size_inc-1:
+            q=1
+        elif np.mod(j,2)==0:
+            q=2
+        else:
+            q=4
+        ph=az[i]
+        th=inc[j]
+        # Transformation matrix
+        f=f+ a*p*q*integrand(th, ph)
+f=f*dang*dang/9.0
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-
-# print(f)
+# # print(f)
+# print(mag_field(a, np.pi/3, np.pi/3))
+# print(mag_field(a, np.pi/5, np.pi/3))
+# print(mag_field(a, np.pi/3, np.pi/2))
+# print(mag_field(a, np.pi/8, np.pi/3))
+# print(integrand(np.pi/8, np.pi/7))
+# print(Beta1_0)
+# print(Beta1_1)
+# print(Beta2_0)
+# print(Beta2_1)
+# print(d_lpmn_arr(2,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
+# print(d_lpmn_arr(2,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
+# print(d_lpmn_arr(3,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
+# print(d_lpmn_arr(4,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
+# print(d_lpmn_arr(7,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
+# print(d_lpmn_arr(0,1, np.cos(np.pi/4))*(-np.sin(np.pi/4)))
