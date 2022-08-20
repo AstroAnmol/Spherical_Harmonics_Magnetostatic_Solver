@@ -23,7 +23,7 @@ int main() {
     arr<< a, sep, susc, hmag, alpha, L;
 
     magnetic trial(arr);
-    // std::cout<<trial.f<<std::endl;
+    std::cout<<trial.f<<std::endl;
 
     // std::cout<< trial.mag_field(a, M_PI/3, M_PI/3).transpose()<< std::endl<< std::endl;
     // std::cout<< trial.mag_field(a, M_PI/5, M_PI/3).transpose()<< std::endl<< std::endl;
@@ -31,4 +31,9 @@ int main() {
     // std::cout<< trial.mag_field(a, M_PI/8, M_PI/3).transpose()<< std::endl<< std::endl;
     
     // std::cout<<trial.integrand(M_PI/8, M_PI/7)<<std::endl;
+    // std::cout<<trial.integrand(M_PI, M_PI/7)<<std::endl;
+    // std::cout<<trial.integrand(3*M_PI/5, M_PI/9)<<std::endl;
+    // std::cout<<trial.integrand(4*M_PI/9, M_PI/4)<<std::endl;
+
+    
 }

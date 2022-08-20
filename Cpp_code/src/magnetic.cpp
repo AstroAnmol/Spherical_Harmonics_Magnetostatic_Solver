@@ -93,8 +93,8 @@ magnetic::magnetic(Eigen::VectorXd arr){
             else if (j%2==0){
                 q=2;}
             else{ q=4;}
-            double ph= az[i];
-            double th= inc[j];
+            double th= az[i];
+            double ph= inc[j];
             f=f+ a*p*q*integrand(th, ph);
         }
     }
@@ -129,12 +129,12 @@ Eigen::Vector3d magnetic::mag_field(double r, double theta, double phi){
                 double sep_pow=std::pow(sep, l+s+1);
                 double minus_one_pow=std::pow(-1, s+m);
                 double r_pow_times_Psm=r_pow_s1*Psm;
-
+                
                 // r component
                 double additional=(minus_one_pow)*s*r_pow_times_Psm/(sep_pow);
-                double Hrs=Hrs + additional*(ls_choose_sm);
+                Hrs=Hrs + additional*(ls_choose_sm);
                 // theta component
-                double Hths=Hths + (minus_one_pow)*ls_choose_sm*(r_pow_s1*dPsm)/(sep_pow);
+                Hths=Hths + (minus_one_pow)*ls_choose_sm*(r_pow_s1*dPsm)/(sep_pow);
                 // phi component
                 if (m==1){
                     Hphis= Hphis + (minus_one_pow)*ls_choose_sm*r_pow_times_Psm/(std::sin(theta))/(sep_pow);
