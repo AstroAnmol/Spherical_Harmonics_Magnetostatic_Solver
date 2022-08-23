@@ -73,28 +73,29 @@ magnetic::magnetic(Eigen::VectorXd arr){
     // Create a 3D spherical mesh
     int N =180;
     double dang= M_PI/N;
-    Eigen::VectorXd inc= Eigen::VectorXd::LinSpaced(N,dang/2, M_PI + dang).transpose();
-    Eigen::VectorXd az= Eigen::VectorXd::LinSpaced(2*N,dang/2, 2*M_PI + dang).transpose();
+    Eigen::VectorXd inc= Eigen::VectorXd::LinSpaced(N+1,dang/2, M_PI + dang/2).transpose();
+    Eigen::VectorXd az= Eigen::VectorXd::LinSpaced(2*N+1,dang/2, 2*M_PI + dang/2).transpose();
+
 
     f=Eigen::Vector3d::Zero();
 
     // Formulating the Maxwell Stress Tensor in Spherical Coordinates
-    for (int i = 0; i < 2*N; i++){
+    for (int i = 0; i < 2*N+1; i++){
         double p;
-        if (i==0 or i==(2*N-1)){
+        if (i==0 or i==(2*N)){
             p=1;}
         else if (i%2==0){
             p=2;}
         else{ p=4;}
-        for (int j = 0; j < N; j++){
+        for (int j = 0; j < N+1; j++){
             double q;
-            if (j==0 or j==(N-1)){
+            if (j==0 or j==(N)){
                 q=1;}
             else if (j%2==0){
                 q=2;}
             else{ q=4;}
-            double th= az[i];
-            double ph= inc[j];
+            double ph= az[i];
+            double th= inc[j];
             f=f+ a*p*q*integrand(th, ph);
         }
     }

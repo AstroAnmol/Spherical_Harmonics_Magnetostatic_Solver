@@ -6,6 +6,11 @@
             "cwd": "/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code/bin",
             "binaryPath": "/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code/bin/runner",
             "binaryArgs": []
+        },
+        {
+            "cwd": "/home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code/bin",
+            "binaryPath": "/home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code/bin/runner",
+            "binaryArgs": []
         }
     ]
 }

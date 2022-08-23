@@ -1,12 +1,10 @@
-/usr/bin/make bin/runner --dry-run --keep-going --print-directory
-make: Entering directory '/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code'
- 
-mkdir -p build
-echo " g++ -std=c++17 -g  -I include -c -o build/main.o src/main.cpp"; g++ -std=c++17 -g  -I include -c -o build/main.o src/main.cpp
+/usr/bin/make bin/runner --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code'
 mkdir -p build
 echo " g++ -std=c++17 -g  -I include -c -o build/magnetic.o src/magnetic.cpp"; g++ -std=c++17 -g  -I include -c -o build/magnetic.o src/magnetic.cpp
- 
+mkdir -p build
+echo " g++ -std=c++17 -g  -I include -c -o build/main.o src/main.cpp"; g++ -std=c++17 -g  -I include -c -o build/main.o src/main.cpp
 echo " Linking..."
-echo " g++ -std=c++17 build/main.o build/magnetic.o -o bin/runner "; g++ -std=c++17 build/main.o build/magnetic.o -o bin/runner 
-make: Leaving directory '/home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code'
+echo " g++ -std=c++17 build/magnetic.o build/main.o -o bin/runner "; g++ -std=c++17 build/magnetic.o build/main.o -o bin/runner 
+make: Leaving directory '/home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code'
  

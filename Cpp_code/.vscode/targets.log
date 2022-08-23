@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 19 13:59:25 2022
+# Make data base, printed on Tue Aug 23 16:43:51 2022
 
 # Variables
 
@@ -43,7 +43,7 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code
+CURDIR := /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code
 # makefile
 SHELL = /bin/sh
 # environment
@@ -51,7 +51,7 @@ SNAP_DATA = /var/snap/code/105
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:49729
+JOURNAL_STREAM = 8:40739
 # makefile (from 'Makefile', line 14)
 CFLAGS := -g 
 # environment
@@ -67,11 +67,9 @@ MAKEFILE_LIST :=  Makefile
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.desktop
 # environment
-USERNAME = aerospacenerd
+USERNAME = anmol
 # makefile (from 'Makefile', line 12)
-SOURCES := src/main.cpp src/magnetic.cpp
-# environment
-MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
+SOURCES := src/magnetic.cpp src/main.cpp
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
@@ -81,25 +79,25 @@ BUILDDIR := build
 # environment
 _ = /snap/code/105/usr/share/code/code
 # environment
-MANAGERPID = 1955
+MANAGERPID = 892
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
-VSCODE_CWD = /home/aerospacenerd
+VSCODE_CWD = /home/anmol
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/105/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/aerospacenerd/.local/bin:/home/aerospacenerd/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/anmol/.local/bin:/home/anmol/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/nerdspace-hp:@/tmp/.ICE-unix/2189,unix/nerdspace-hp:/tmp/.ICE-unix/2189
+SESSION_MANAGER = local/sikka-dusty:@/tmp/.ICE-unix/1256,unix/sikka-dusty:/tmp/.ICE-unix/1256
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-GDK_PIXBUF_MODULE_FILE = /home/aerospacenerd/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+GDK_PIXBUF_MODULE_FILE = /home/anmol/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
 SNAP = /snap/code/105
 # environment
@@ -111,7 +109,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 2dbc2dd0ae8c4c94817872e1e6cb0a0b
+INVOCATION_ID = 46ed50aa8fe6449f9e3fbb8725ba21d5
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/105/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # makefile (from 'Makefile', line 15)
@@ -125,7 +123,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 19819
+GIO_LAUNCHED_DESKTOP_FILE_PID = 9832
 # automatic
 %F = $(notdir $%)
 # environment
@@ -135,11 +133,11 @@ SRCDIR := src
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-PWD = /home/aerospacenerd/UMD/Research/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code
+PWD = /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2146
+SSH_AGENT_PID = 1226
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -147,25 +145,25 @@ GTK_MODULES = gail:atk-bridge
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /home/aerospacenerd
+HOME = /home/anmol
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/aerospacenerd/.config/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
+VSCODE_CODE_CACHE_PATH = /home/anmol/.config/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
 # environment
-LOGNAME = aerospacenerd
+LOGNAME = anmol
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
-SNAP_CONTEXT = pZiKrT_nCI4CjMO6QFf863fkx2msh2z9mFOUvrAR9Ri-3MBWeLpc
+SNAP_CONTEXT = 3lMO4Es8iYQKirkf3Y9dMG2W8tDAE0x6ZRQVmeWH3YUHl4er8HMJ
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
-SNAP_USER_COMMON = /home/aerospacenerd/snap/code/common
+SNAP_USER_COMMON = /home/anmol/snap/code/common
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -175,7 +173,7 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # environment
 MAKELEVEL := 0
 # environment
-SNAP_REAL_HOME = /home/aerospacenerd
+SNAP_REAL_HOME = /home/anmol
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -183,7 +181,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/aerospacenerd/snap/code/105
+SNAP_USER_DATA = /home/anmol/snap/code/105
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 5)
@@ -193,7 +191,7 @@ GNOME_SHELL_SESSION_MODE = ubuntu
 # default
 MAKE_VERSION := 4.2.1
 # environment
-USER = aerospacenerd
+USER = anmol
 # environment
 SNAP_REVISION = 105
 # makefile
@@ -211,7 +209,7 @@ INC := -I include
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-86b2dcd5-1.70.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-f35448c0-1.70.2-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -230,14 +228,12 @@ GDK_BACKEND = x11
 SRCEXT := cpp
 # environment
 QT_ACCESSIBILITY = 1
-# environment
-DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # 'override' directive
 .SHELLSTATUS := 0
 # default
 MAKEFILES := 
 # environment
-SNAP_COOKIE = pZiKrT_nCI4CjMO6QFf863fkx2msh2z9mFOUvrAR9Ri-3MBWeLpc
+SNAP_COOKIE = 3lMO4Es8iYQKirkf3Y9dMG2W8tDAE0x6ZRQVmeWH3YUHl4er8HMJ
 # automatic
 <F = $(notdir $<)
 # environment
@@ -263,13 +259,13 @@ GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # makefile (from 'Makefile', line 13)
-OBJECTS := build/main.o build/magnetic.o
+OBJECTS := build/magnetic.o build/main.o
 # environment
 LANG = C
 # environment
-VSCODE_PID = 19870
+VSCODE_PID = 9880
 # variable set hash-table stats:
-# Load=128/1024=12%, Rehash=0, Collisions=25/167=15%
+# Load=126/1024=12%, Rehash=0, Collisions=25/165=15%
 
 # Pattern-specific Variable Values
 
@@ -277,20 +273,20 @@ VSCODE_PID = 19870
 
 # Directories
 
-# . (device 66313, inode 1972117): 8 files, no impossibilities.
-# src (device 66313, inode 1975698): No files, no impossibilities so far.
+# . (device 66306, inode 33557281): 12 files, no impossibilities.
+# src (device 66306, inode 33949006): No files, no impossibilities so far.
 
-# 8 files, no impossibilities in 2 directories.
+# 12 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
 build/%.o: src/%.cpp
+ 
 #  recipe to execute (from 'Makefile', line 23):
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 # 1 implicit rules, 0 (0.0%) terminal.
- 
 
 # Files
 
@@ -315,7 +311,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-13 13:42:37.0558563
+#  Last modified 2022-08-23 16:16:41.293067081
 #  File has been updated.
 #  Successfully updated.
 
@@ -347,7 +343,7 @@ clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-bin/runner: build/main.o build/magnetic.o
+bin/runner: build/magnetic.o build/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -370,12 +366,12 @@ ticket:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 22 / storage = 187 B / avg = 8 B
-# current buf: size = 8162 B / used = 187 B / count = 22 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 26 / storage = 206 B / avg = 7 B
+# current buf: size = 8162 B / used = 206 B / count = 26 / avg = 7 B
 
-# strcache performance: lookups = 33 / hit rate = 33%
+# strcache performance: lookups = 37 / hit rate = 29%
 # hash-table stats:
-# Load=22/8192=0%, Rehash=0, Collisions=1/33=3%
-# Finished Make data base on Fri Aug 19 13:59:26 2022
+# Load=26/8192=0%, Rehash=0, Collisions=1/37=3%
+# Finished Make data base on Tue Aug 23 16:43:51 2022
 
  
