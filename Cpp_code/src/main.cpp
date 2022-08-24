@@ -1,7 +1,8 @@
 #include <iostream>
 #include <eigen-3.4.0/Eigen/Dense>
-#include "magnetic.h"
+#include "spherical_harmonics.h"
 #include <cmath>
+#include <chrono>
 //define associate legendre functions for cos(theta)
 double lpmn_cos(int m, int n, double theta){
     return std::pow(-1, m)*std::assoc_legendre(n, m, std::cos(theta));
@@ -22,18 +23,23 @@ int main() {
     Eigen::VectorXd arr(6);
     arr<< a, sep, susc, hmag, alpha, L;
 
-    magnetic trial(arr);
+
+    // Get starting timepoint
+    auto start = std::chrono::high_resolution_clock::now();
+
+    spherical_harmonics trial(arr);
     std::cout<<trial.f<<std::endl;
 
-    // std::cout<< trial.mag_field(a, M_PI/3, M_PI/3).transpose()<< std::endl<< std::endl;
-    // std::cout<< trial.mag_field(a, M_PI/5, M_PI/3).transpose()<< std::endl<< std::endl;
-    // std::cout<< trial.mag_field(a, M_PI/3, M_PI/2).transpose()<< std::endl<< std::endl;
-    // std::cout<< trial.mag_field(a, M_PI/8, M_PI/3).transpose()<< std::endl<< std::endl;
-    
-    // std::cout<<trial.integrand(M_PI/8, M_PI/7)<<std::endl;
-    // std::cout<<trial.integrand(M_PI, M_PI/7)<<std::endl;
-    // std::cout<<trial.integrand(3*M_PI/5, M_PI/9)<<std::endl;
-    // std::cout<<trial.integrand(4*M_PI/9, M_PI/4)<<std::endl;
+    // Get ending timepoint
+    auto stop = std::chrono::high_resolution_clock::now();
+ 
+    // Get duration. Substart timepoints to
+    // get duration. To cast it to proper unit
+    // use duration cast method
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+ 
+    std::cout << "Time taken by function: "
+         << duration.count() << " microseconds" << std::endl;
 
     
 }

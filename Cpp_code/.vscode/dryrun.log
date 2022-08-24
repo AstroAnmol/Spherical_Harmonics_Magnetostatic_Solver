@@ -1,4 +1,4 @@
-/usr/bin/make bin/runner --dry-run --always-make --keep-going --print-directory
+/usr/bin/make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_code'
 mkdir -p build
 echo " g++ -std=c++17 -g  -I include -c -o build/magnetic.o src/magnetic.cpp"; g++ -std=c++17 -g  -I include -c -o build/magnetic.o src/magnetic.cpp

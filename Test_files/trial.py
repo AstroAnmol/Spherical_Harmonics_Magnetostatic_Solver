@@ -182,27 +182,9 @@ for i in range(size_az):
         th=inc[j]
         # Transformation matrix
         f=f+ a*p*q*integrand(th, ph)
+        # print(i,j)
 f=f*dang*dang/9.0
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-# # print(f)
-# print(mag_field(a, np.pi/3, np.pi/3))
-# print(mag_field(a, np.pi/5, np.pi/3))
-# print(mag_field(a, np.pi/3, np.pi/2))
-# print(mag_field(a, np.pi/8, np.pi/3))
-# print()
-# print(integrand(np.pi/8, np.pi/7))
-# print(integrand(np.pi, np.pi/7))
-# print(integrand(3*np.pi/5, np.pi/9))
-# print(integrand(4*np.pi/9, np.pi/4))
-# print(Beta1_0)
-# print(Beta1_1)
-# print(Beta2_0)
-# print(Beta2_1)
-# print(d_lpmn_arr(2,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
-# print(d_lpmn_arr(2,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
-# print(d_lpmn_arr(3,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
-# print(d_lpmn_arr(4,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
-# print(d_lpmn_arr(7,10, np.cos(np.pi/5))*(-np.sin(np.pi/5)))
-# print(d_lpmn_arr(0,1, np.cos(np.pi/4))*(-np.sin(np.pi/4)))
+print(f)
