@@ -6,7 +6,7 @@
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug 24 17:29:04 2022
+# Make data base, printed on Sat Oct 22 21:28:59 2022
 
 # Variables
 
@@ -45,11 +45,11 @@ CURDIR := /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/105
+SNAP_DATA = /var/snap/code/111
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:40739
+JOURNAL_STREAM = 8:37597
 # makefile (from 'Makefile', line 14)
 CFLAGS := -g 
 # environment
@@ -67,7 +67,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.deskto
 # environment
 USERNAME = anmol
 # makefile (from 'Makefile', line 12)
-SOURCES := src/magnetic.cpp src/main.cpp
+SOURCES := src/spherical_harmonics.cpp src/magnetic.cpp src/main.cpp
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
@@ -75,15 +75,15 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # makefile (from 'Makefile', line 8)
 BUILDDIR := build
 # environment
-_ = /snap/code/105/usr/share/code/code
+_ = /snap/code/111/usr/share/code/code
 # environment
-MANAGERPID = 892
+MANAGERPID = 924
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/anmol
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/105/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/111/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -91,25 +91,23 @@ PATH = /home/anmol/.local/bin:/home/anmol/.local/bin:/usr/local/sbin:/usr/local/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/sikka-dusty:@/tmp/.ICE-unix/1256,unix/sikka-dusty:/tmp/.ICE-unix/1256
+SESSION_MANAGER = local/sikka-dusty:@/tmp/.ICE-unix/1283,unix/sikka-dusty:/tmp/.ICE-unix/1283
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/anmol/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/105
+SNAP = /snap/code/111
 # environment
-SNAP_VERSION = e4503b30
+SNAP_VERSION = d045a5ed
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
-DISABLE_WAYLAND = 1
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 46ed50aa8fe6449f9e3fbb8725ba21d5
+INVOCATION_ID = 9af7cd276f9246f4b4720bfb243f90a5
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/105/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/111/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # makefile (from 'Makefile', line 15)
 LIB := 
 # default
@@ -121,7 +119,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 9832
+GIO_LAUNCHED_DESKTOP_FILE_PID = 6002
 # automatic
 %F = $(notdir $%)
 # environment
@@ -135,7 +133,7 @@ PWD = /home/anmol/Research/Code/Spherical_Harmonics_Magnetostatic_Solver/Cpp_cod
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1226
+SSH_AGENT_PID = 1246
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -149,7 +147,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/anmol/.config/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
+VSCODE_CODE_CACHE_PATH = /home/anmol/.config/Code/CachedData/d045a5eda657f4d7b676dedbfa7aab8207f8a075
 # environment
 LOGNAME = anmol
 # environment
@@ -179,7 +177,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/anmol/snap/code/105
+SNAP_USER_DATA = /home/anmol/snap/code/111
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 5)
@@ -191,7 +189,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = anmol
 # environment
-SNAP_REVISION = 105
+SNAP_REVISION = 111
 # makefile
 .DEFAULT_GOAL := bin/runner
 # environment
@@ -207,7 +205,7 @@ INC := -I include
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-f35448c0-1.70.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-f35448c0-1.72.2-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -257,13 +255,13 @@ GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # makefile (from 'Makefile', line 13)
-OBJECTS := build/magnetic.o build/main.o
+OBJECTS := build/spherical_harmonics.o build/magnetic.o build/main.o
 # environment
 LANG = C
 # environment
-VSCODE_PID = 9880
+VSCODE_PID = 6054
 # variable set hash-table stats:
-# Load=126/1024=12%, Rehash=0, Collisions=25/165=15%
+# Load=125/1024=12%, Rehash=0, Collisions=25/164=15%
 
 # Pattern-specific Variable Values
 
@@ -281,10 +279,10 @@ VSCODE_PID = 9880
 build/%.o: src/%.cpp
 #  recipe to execute (from 'Makefile', line 23):
 	@mkdir -p $(BUILDDIR)
-	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
-
  
 make: *** No rule to make target 'all'.  Stop.
+
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 # 1 implicit rules, 0 (0.0%) terminal.
 
@@ -323,6 +321,12 @@ tester:
 	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
 
 # Not a target:
+build/spherical_harmonics.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 build/magnetic.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -343,7 +347,7 @@ clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-bin/runner: build/magnetic.o build/main.o
+bin/runner: build/spherical_harmonics.o build/magnetic.o build/main.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -359,19 +363,19 @@ ticket:
 	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
 
 # files hash-table stats:
-# Load=11/1024=1%, Rehash=0, Collisions=0/24=0%
+# Load=12/1024=1%, Rehash=0, Collisions=0/26=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 26 / storage = 206 B / avg = 7 B
-# current buf: size = 8162 B / used = 206 B / count = 26 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 27 / storage = 234 B / avg = 8 B
+# current buf: size = 8162 B / used = 234 B / count = 27 / avg = 8 B
 
-# strcache performance: lookups = 37 / hit rate = 29%
+# strcache performance: lookups = 38 / hit rate = 28%
 # hash-table stats:
-# Load=26/8192=0%, Rehash=0, Collisions=1/37=3%
-# Finished Make data base on Wed Aug 24 17:29:04 2022
+# Load=27/8192=0%, Rehash=0, Collisions=1/38=3%
+# Finished Make data base on Sat Oct 22 21:28:59 2022
 
  

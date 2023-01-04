@@ -14,10 +14,10 @@ double d_lpmn_cos(int m, int n, double theta){
 
 int main() {
     double a=1;
-    double sep=2;
+    double sep=2.2;
     double hmag=1;
     double alpha=0;
-    double susc=1;
+    double susc=0.96;
     double L=10;
 
     Eigen::VectorXd arr(6);
@@ -28,7 +28,7 @@ int main() {
     auto start = std::chrono::high_resolution_clock::now();
 
     spherical_harmonics trial(arr);
-    std::cout<<trial.f<<std::endl;
+    std::cout<<trial.get_force()*(1.4e-6*1.4e-6)*(477*477)<<std::endl;
 
     // Get ending timepoint
     auto stop = std::chrono::high_resolution_clock::now();
